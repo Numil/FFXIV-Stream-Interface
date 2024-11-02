@@ -1,0 +1,28 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "dev:host": "nuxt dev --host",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxtjs/tailwindcss": "^6.12.2",
+    "@types/luxon": "^3.4.2",
+    "graphql": "^16.9.0",
+    "graphql-request": "^7.1.2",
+    "luxon": "^3.5.0",
+    "nuxt": "^3.11.2",
+    "prettier": "^3.2.5",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/client-preset": "4.5.0",
+    "sass": "^1.80.6"
+  }
+}
