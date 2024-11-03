@@ -1,9 +1,7 @@
 <script setup lang="ts">
-const { currentEncounter } = useRace()
+const { fightIDsPerReports } = useRace(60000)
 
-// const deathCount = computed<number | undefined>(
-//     () => currentEncounter.value?.perPull.reduce((acc, pull) => acc + pull., 0)
-// )
+const { deathCounts } = useDeathsCounter(fightIDsPerReports)
 </script>
 
-<template></template>
+<template>{{ deathCounts }}</template>

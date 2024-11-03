@@ -1,10 +1,12 @@
 import { gql } from 'graphql-request'
 
-export default () => {
+export default (delay: number = 10000) => {
     const authToken = useAuthToken()
 
     const currentEncounter = ref<Encounter>()
     const lastPull = ref<Pull>()
+
+    const fightIDsPerReports = ref<{ [key: string]: number[] }>({})
 
     const raceDocument = gql`
         query {
@@ -38,6 +40,10 @@ export default () => {
             )
 
             if (currentEncounter.value) {
+                getFightIDsPerReports(currentEncounter.value?.perPull)
+            }
+
+            if (currentEncounter.value) {
                 lastPull.value =
                     currentEncounter.value.perPull[
                         currentEncounter.value.perPull.length - 1
@@ -46,13 +52,29 @@ export default () => {
         }
     }
 
-    let interval = ref<NodeJS.Timeout | undefined>()
+    const getFightIDsPerReports = (pulls: Pull[]) => {
+        pulls.forEach((element) => {
+            if (!fightIDsPerReports.value[element.reportCode]) {
+                fightIDsPerReports.value[element.reportCode] = [element.fightId]
+            } else if (
+                !fightIDsPerReports.value[element.reportCode].includes(
+                    element.fightId
+                )
+            ) {
+                fightIDsPerReports.value[element.reportCode].push(
+                    element.fightId
+                )
+            }
+        })
+    }
+
+    const interval = ref<NodeJS.Timeout | undefined>()
 
     onMounted(() => {
         fetchRaceData()
         interval.value = setInterval(async () => {
             await fetchRaceData()
-        }, 10000)
+        }, delay)
     })
 
     onUnmounted(() => {
@@ -63,6 +85,7 @@ export default () => {
 
     return {
         currentEncounter,
+        fightIDsPerReports,
         lastPull
     }
 }
