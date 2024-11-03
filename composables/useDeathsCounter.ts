@@ -1,6 +1,6 @@
 import { gql } from 'graphql-request'
 
-export default (fightIDsPerReports: Ref<{ [key: string]: number[] }>) => {
+export default (fightIDsPerReports: Ref<FightIDsWithReport>) => {
     const authToken = useAuthToken()
 
     const getDeathsDocument = (reportCode: string, fightIDs: number[]) => gql`
@@ -20,7 +20,7 @@ export default (fightIDsPerReports: Ref<{ [key: string]: number[] }>) => {
     watch(
         fightIDsPerReports,
         async () => {
-            getDeathsData()
+            await onUpdatedReports()
         },
         { deep: true }
     )
@@ -37,7 +37,22 @@ export default (fightIDsPerReports: Ref<{ [key: string]: number[] }>) => {
             })
         })
 
-    const getDeathsData = async () => {
+    const getDeathsData = async (value: FightIDsWithReport) => {
+        for (const reportCode in value) {
+            // We make chunks of 10 fight IDs to avoid hitting the API limit
+            const fightIDsChunks = chunkFights(value[reportCode], 10)
+
+            for (const chunk of fightIDsChunks) {
+                const response = await fetchFightsData(reportCode, chunk)
+
+                // We add the number of deaths events to the total
+                deathCounts.value +=
+                    response.data.reportData.report.table.data.entries.length
+            }
+        }
+    }
+
+    const onUpdatedReports = async () => {
         // We only get the reports that have new data
         const changedReports = Object.keys(fightIDsPerReports.value).filter(
             (reportCode) =>
@@ -64,29 +79,13 @@ export default (fightIDsPerReports: Ref<{ [key: string]: number[] }>) => {
                 )
             })
 
-            // We only fetch the data for the new fight IDs
-
-            for (const reportCode in newFightIDsPerReports) {
-                // We make chunks of 10 fight IDs to avoid hitting the API limit
-                const fightIDsChunks = chunk(
-                    newFightIDsPerReports[reportCode],
-                    10
-                )
-
-                for (const chunk of fightIDsChunks) {
-                    const response = await fetchFightsData(reportCode, chunk)
-
-                    // We add the number of deaths events to the total
-                    deathCounts.value +=
-                        response.data.reportData.report.table.data.entries.length
-                }
-            }
+            getDeathsData(newFightIDsPerReports)
         }
 
         previousFightIDsPerReports = { ...fightIDsPerReports.value }
     }
 
-    const chunk = (array: number[], size: number): number[][] => {
+    const chunkFights = (array: number[], size: number): number[][] => {
         const result: number[][] = []
         for (let i = 0; i < array.length; i += size) {
             result.push(array.slice(i, i + size))
