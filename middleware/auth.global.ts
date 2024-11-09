@@ -1,8 +1,8 @@
 export default defineNuxtRouteMiddleware(async () => {
     if (process.client) return
 
-    const secret = useNuxtApp().$config.OAUTH_TOKEN
-    const clientId = useNuxtApp().$config.CLIENT_ID
+    const secret = useNuxtApp().$config.oauthToken
+    const clientId = useNuxtApp().$config.clientId
 
     const getAuthToken: any = await $fetch('/fflogs/oauth/token', {
         method: 'POST',
