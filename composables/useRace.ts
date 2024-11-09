@@ -2,6 +2,7 @@ import { gql } from 'graphql-request'
 
 export default (delay: number = 10000) => {
     const authToken = useAuthToken()
+    const guildId = useRuntimeConfig().public.guildId
 
     const currentEncounter = ref<Encounter>()
     const lastPull = ref<Pull>()
@@ -11,7 +12,7 @@ export default (delay: number = 10000) => {
     const raceDocument = gql`
         query {
             progressRaceData {
-                progressRace(guildID: 126166)
+                progressRace(guildID: ${guildId})
             }
         }
     `

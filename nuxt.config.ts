@@ -2,8 +2,11 @@
 export default defineNuxtConfig({
     devtools: { enabled: true },
     runtimeConfig: {
-        OAUTH_TOKEN: process.env.NUXT_OAUTH_TOKEN,
-        CLIENT_ID: process.env.NUXT_CLIENT_ID
+        oauthToken: '',
+        clientId: '',
+        public: {
+            guildId: ''
+        }
     },
     modules: ['@nuxtjs/tailwindcss']
 })
