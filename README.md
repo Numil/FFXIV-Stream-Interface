@@ -1,4 +1,5 @@
 # Final Fantasy XIV race tracker
+![Screenshot 2024-11-10 at 23-05-01 ](https://github.com/user-attachments/assets/5838d5b2-0dd9-49f4-b2df-f75591bd61c4)
 
 This project is made using Nuxt and Vue. Styling is done with Tailwind.
 
