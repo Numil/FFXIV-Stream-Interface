@@ -51,7 +51,7 @@ const bestPhase = computed<number | undefined>(
             >
                 <div
                     class="flex flex-wrap w-full relative"
-                    v-for="role in currentEncounter?.composition.roles"
+                    v-for="role in currentEncounter?.composition?.roles"
                 >
                     <div class="flex gap-4 overflow-hidden">
                         <div

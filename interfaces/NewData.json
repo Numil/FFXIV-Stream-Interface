@@ -1,0 +1,56 @@
+{
+    "data": {
+        "progressRaceData": {
+            "progressRace": [
+                {
+                    "id": 126166,
+                    "name": "just kill it lol",
+                    "faction": 0,
+                    "logoImageUrl": "https:\/\/assets.rpglogs.com\/img\/ff\/faction-0.png",
+                    "logoImageIsCustom": false,
+                    "logoImageFallbackUrl": "https:\/\/assets.rpglogs.com\/img\/ff\/faction-0.png",
+                    "streamChannel": "numiliation",
+                    "rank": null,
+                    "killedCount": 0,
+                    "nameCssClass": "faction-0",
+                    "rankCssClass": "common",
+                    "encounters": [
+                        {
+                            "id": 1079,
+                            "name": "Futures Rewritten",
+                            "shortName": "Futures Rewritten",
+                            "backgroundImageUrl": "https:\/\/assets.rpglogs.com\/img\/ff\/bosses\/1079-phase-0-with-background.jpg?v=2",
+                            "backgroundImageFallbackUrl": "https:\/\/assets.rpglogs.com\/img\/ff\/bosses\/1079-phase-0-with-background.jpg?v=2",
+                            "iconImageUrl": "https:\/\/assets.rpglogs.com\/img\/ff\/bosses\/1079-icon.jpg?v=3",
+                            "transparentImageUrl": "https:\/\/assets.rpglogs.com\/img\/ff\/bosses\/1079-with-transparent-background.png?v=2",
+                            "isKilled": false,
+                            "killedAtTimestamp": null,
+                            "youtubeEmbedUrl": null,
+                            "showStats": true,
+                            "bestPercent": 100,
+                            "bestPercentForDisplay": "100%",
+                            "pullCount": 0,
+                            "composition": null,
+                            "perPull": [],
+                            "bestPhaseIndex": 0,
+                            "showAnalyzeAllPullsButton": true,
+                            "shouldShowFightSummaryCharts": false
+                        }
+                    ],
+                    "currentEncounterId": 1079,
+                    "coach": null,
+                    "guildIsStreaming": false,
+                    "lastKillTime": 0,
+                    "bestPercentOfNonKilledEncounters": 100,
+                    "reportTimestampsUsedHash": "126166-69adc18e617d",
+                    "isFullUpdate": true,
+                    "region": {
+                        "id": 2,
+                        "name": "Europe",
+                        "shortName": "EU"
+                    }
+                }
+            ]
+        }
+    }
+}
