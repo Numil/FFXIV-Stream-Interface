@@ -7,39 +7,75 @@ const pullCount = computed<number | undefined>(
     () => currentEncounter.value?.pullCount
 )
 
-const bestPullPercent = computed<string | undefined>(
-    () => currentEncounter.value?.bestPercentForDisplay
+const bestPullPercent = computed<number | undefined>(
+    () => currentEncounter.value?.bestPercent
 )
 
-const bestPhase = computed<number | undefined>(
-    () => currentEncounter.value?.bestPhaseIndex
+const bestPhase = computed<number>(
+    () => (currentEncounter.value?.bestPhaseIndex || 0) + 1
+)
+
+const phaseImages: {
+    [key: number]: string
+} = {
+    1: '/phase1.png',
+    2: '/phase2.jpg',
+    3: '/phase3.jpg',
+    4: '/phase4.png',
+    5: '/phase5.png'
+}
+
+const phaseImageLink = computed<string | undefined>(
+    () => phaseImages[bestPhase.value]
+)
+
+const roundedStyle = computed<string>(
+    () => (useRoute().query.rounded as string) || '0'
+)
+
+const borderStyle = computed<string>(
+    () => (useRoute().query.border as string) || '0'
 )
 </script>
 
 <template>
     <div
         v-if="currentEncounter"
-        class="relative flex flex-col w-fit h-fit border-r-[6px] rounded-tr-2xl border-t-[6px] border-blue-200 border-opacity-40 overflow-hidden"
+        class="relative flex flex-col w-fit h-fit border-slate-200 border-opacity-60 overflow-hidden"
+        :style="{ borderRadius: roundedStyle, borderWidth: borderStyle }"
     >
         <img
             class="absolute aspect-video object-cover h-[512px]"
-            src="https://lds-img.finalfantasyxiv.com/promo/h/z/nVf84KvM4bFI3frwvuvd3vZhKc.jpg"
+            :src="phaseImageLink"
         />
         <div
-            class="h-[512px] justify-between flex p-4 flex-col z-20 text-purple-50 font-extrabold uppercase"
+            class="h-[512px] flex p-4 gap-4 flex-col z-20 text-slate-50 font-extrabold uppercase radial-gradient"
+            :class="[
+                bestPhase === 3 || bestPhase === 4
+                    ? 'justify-end'
+                    : 'justify-between'
+            ]"
         >
             <div
-                class="flex bg-black bg-opacity-60 px-3 py-2 rounded-2xl w-fit flex-col"
+                class="flex px-3 py-2 rounded-2xl w-fit flex-col"
+                :class="[
+                    {
+                        'self-end': bestPhase === 3
+                    },
+                    bestPhase === 4
+                        ? 'bg-white bg-opacity-20'
+                        : 'bg-black bg-opacity-60'
+                ]"
             >
                 <div
-                    class="drop-shadow-[2px_2px_0px_rgba(0,0,0,0.8)] flex flex-col gap-1"
+                    class="drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)] flex flex-col gap-1"
                 >
                     <div class="text-[3rem] leading-[3rem]">Best pull</div>
                     <span
                         class="text-[3rem] leading-[3rem]"
                         v-if="bestPhase !== undefined"
                     >
-                        Phase {{ bestPhase + 1 }} - {{ bestPullPercent }}
+                        Phase {{ bestPhase }} - {{ bestPullPercent }}%
                     </span>
                     <div class="text-[2rem] leading-[2rem]">
                         {{ pullCount }} pulls
@@ -47,7 +83,12 @@ const bestPhase = computed<number | undefined>(
                 </div>
             </div>
             <div
-                class="bg-black bg-opacity-60 flex flex-col gap-2 px-4 py-2 rounded-2xl justify-end"
+                class="flex flex-col gap-2 px-4 py-2 rounded-2xl justify-end"
+                :class="[
+                    bestPhase === 4
+                        ? 'bg-white bg-opacity-20'
+                        : 'bg-black bg-opacity-60'
+                ]"
             >
                 <div
                     class="flex flex-wrap w-full relative"
@@ -55,7 +96,7 @@ const bestPhase = computed<number | undefined>(
                 >
                     <div class="flex gap-4 overflow-hidden">
                         <div
-                            class="flex shrink-0 gap-2 items-center text-lg drop-shadow-[2px_2px_0px_rgba(0,0,0,0.8)]"
+                            class="flex shrink-0 gap-2 items-center text-lg drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)]"
                             v-for="player in role.players"
                         >
                             <img
@@ -75,3 +116,15 @@ const bestPhase = computed<number | undefined>(
         </div>
     </div>
 </template>
+
+<style lang="css" scoped>
+.radial-gradient {
+    background: rgb(2, 0, 36);
+    background: radial-gradient(
+        ellipse at center,
+        rgba(2, 0, 36, 0) 0%,
+        rgba(255, 255, 255, 0) 50%,
+        rgba(0, 0, 0, 60%) 100%
+    );
+}
+</style>
