@@ -7,8 +7,8 @@ const pullCount = computed<number | undefined>(
     () => currentEncounter.value?.pullCount
 )
 
-const bestPullPercent = computed<number | undefined>(
-    () => currentEncounter.value?.bestPercent
+const bestPullPercent = computed<string | undefined>(
+    () => currentEncounter.value?.bestPercentForDisplay
 )
 
 const bestPhase = computed<number>(
@@ -75,7 +75,7 @@ const borderStyle = computed<string>(
                         class="text-[3rem] leading-[3rem]"
                         v-if="bestPhase !== undefined"
                     >
-                        Phase {{ bestPhase }} - {{ bestPullPercent }}%
+                        {{ bestPullPercent }}
                     </span>
                     <div class="text-[2rem] leading-[2rem]">
                         {{ pullCount }} pulls
