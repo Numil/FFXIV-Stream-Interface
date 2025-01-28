@@ -1,6 +1,6 @@
 import { gql } from 'graphql-request'
 
-export default (delay: number = 10000) => {
+export default (delay: number = 30000) => {
     const authToken = useAuthToken()
     const guildId = useRuntimeConfig().public.guildId
 
