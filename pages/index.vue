@@ -15,6 +15,8 @@ const bestPhase = computed<number>(
     () => (currentEncounter.value?.bestPhaseIndex || 0) + 1
 )
 
+const isCleared = computed<boolean>(() => !!currentEncounter.value?.isKilled)
+
 const phaseImages: {
     [key: number]: string
 } = {
@@ -25,8 +27,8 @@ const phaseImages: {
     5: '/phase5.png'
 }
 
-const phaseImageLink = computed<string | undefined>(
-    () => phaseImages[bestPhase.value]
+const phaseImageLink = computed<string | undefined>(() =>
+    isCleared.value ? '/clear.png' : phaseImages[bestPhase.value]
 )
 
 const roundedStyle = computed<string>(
@@ -70,12 +72,17 @@ const borderStyle = computed<string>(
                 <div
                     class="drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)] flex flex-col gap-1"
                 >
-                    <div class="text-[3rem] leading-[3rem]">Best pull</div>
+                    <div class="text-[3rem] leading-[3rem]" v-if="!isCleared">
+                        Best pull
+                    </div>
                     <span
                         class="text-[3rem] leading-[3rem]"
-                        v-if="bestPhase !== undefined"
+                        v-if="bestPhase !== undefined && !isCleared"
                     >
                         {{ bestPullPercent }}
+                    </span>
+                    <span class="text-[3rem] leading-[3rem]" v-else>
+                        Cleared
                     </span>
                     <div class="text-[2rem] leading-[2rem]">
                         {{ pullCount }} pulls
