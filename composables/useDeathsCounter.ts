@@ -1,4 +1,6 @@
 import { gql } from 'graphql-request'
+import type { APIResponse } from '~/interfaces/API'
+import type { FightIDsWithReport, ReportDataObject } from '~/interfaces/Deaths'
 
 export default (fightIDsPerReports: Ref<FightIDsWithReport>) => {
     const authToken = useAuthToken()

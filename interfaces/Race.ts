@@ -1,12 +1,12 @@
-interface ProgressRaceDataGraph {
+export interface ProgressRaceDataGraph {
     progressRaceData: ProgressRaceData
 }
 
-interface ProgressRaceData {
+export interface ProgressRaceData {
     progressRace: ProgressRace[]
 }
 
-interface ProgressRace {
+export interface ProgressRace {
     id: number
     name: string
     faction: number
@@ -29,7 +29,7 @@ interface ProgressRace {
     region: Region
 }
 
-interface Encounter {
+export interface Encounter {
     id: number
     name: string
     shortName: string
@@ -51,7 +51,7 @@ interface Encounter {
     shouldShowFightSummaryCharts: boolean
 }
 
-interface Composition {
+export interface Composition {
     roles: Role[]
     supportsCombatantInfo: boolean
     baseUrl: string
@@ -63,13 +63,13 @@ interface Composition {
     preloadedTalentBlueprints: string | null
 }
 
-interface Role {
+export interface Role {
     name: string
     maxNumberOfColumns: number
     players: Player[]
 }
 
-interface Player {
+export interface Player {
     guid: number
     name: string
     server: string
@@ -89,7 +89,7 @@ interface Player {
     talentTree: any | null
 }
 
-interface Pull {
+export interface Pull {
     reportCode: string
     fightId: number
     reportIsPrivate: boolean
@@ -101,7 +101,7 @@ interface Pull {
     lastPhase: any | null
 }
 
-interface Region {
+export interface Region {
     id: number
     name: string
     shortName: string

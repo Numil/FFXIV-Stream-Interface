@@ -1,26 +1,29 @@
 <script setup lang="ts">
-const { lastPull } = useRace()
+import { Fights } from '~/interfaces/Fights'
+
+const fightId = (useRoute().query.fightId as string) || undefined
+const { lastPull, currentEncounter, currentEncounterIndex, encounterCount } =
+    useRace(fightId)
 
 const lastPullPercent = computed(() => lastPull.value?.bestPercentForDisplay)
-const lastPullPhase = computed(() => lastPull.value?.lastPhase)
 
 const roundedStyle = computed<string>(
     () => (useRoute().query.rounded as string) || '0'
 )
 
-const phaseImages: {
-    [key: number]: string
-} = {
-    1: '/phase1.png',
-    2: '/phase2.jpg',
-    3: '/phase3.jpg',
-    4: '/phase4.png',
-    5: '/phase5.png'
-}
+const fightImages = Fights.find((fight) => fight.id === fightId)?.phases || []
 
-const phaseImageLink = computed<string | undefined>(
-    () => phaseImages[lastPullPhase.value.number]
+const bestPhase = computed<number>(
+    () => (currentEncounter.value?.bestPhaseIndex || 0) + 1
 )
+
+const phaseImageLink = computed<string | undefined>(() => {
+    if (fightImages.length === 0) return 'clear.png'
+
+    return encounterCount.value !== 1
+        ? fightImages[currentEncounterIndex.value]
+        : fightImages[bestPhase.value - 1]
+})
 
 const borderStyle = computed<string>(
     () => (useRoute().query.border as string) || '0'

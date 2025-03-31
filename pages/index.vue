@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { Fights } from '~/interfaces/Fights'
 import { JobImages } from '~/interfaces/UI'
 
-const { currentEncounter } = useRace()
+const fightId = (useRoute().query.fightId as string) || undefined
+
+const { currentEncounter, currentEncounterIndex, encounterCount } =
+    useRace(fightId)
 
 const pullCount = computed<number | undefined>(
     () => currentEncounter.value?.pullCount
@@ -17,19 +21,15 @@ const bestPhase = computed<number>(
 
 const isCleared = computed<boolean>(() => !!currentEncounter.value?.isKilled)
 
-const phaseImages: {
-    [key: number]: string
-} = {
-    1: '/phase1.png',
-    2: '/phase2.jpg',
-    3: '/phase3.jpg',
-    4: '/phase4.png',
-    5: '/phase5.png'
-}
+const fightImages = Fights.find((fight) => fight.id === fightId)?.phases || []
 
-const phaseImageLink = computed<string | undefined>(() =>
-    isCleared.value ? '/clear.png' : phaseImages[bestPhase.value]
-)
+const phaseImageLink = computed<string | undefined>(() => {
+    if (fightImages.length === 0) return 'clear.png'
+
+    return encounterCount.value !== 1
+        ? fightImages[currentEncounterIndex.value]
+        : fightImages[bestPhase.value - 1]
+})
 
 const roundedStyle = computed<string>(
     () => (useRoute().query.rounded as string) || '0'
@@ -43,7 +43,7 @@ const borderStyle = computed<string>(
 <template>
     <div
         v-if="currentEncounter"
-        class="relative flex flex-col w-fit h-fit border-slate-200 border-opacity-60 overflow-hidden"
+        class="relative flex flex-col w-fit h-fit border-slate-200 border-opacity-60 overflow-hidden min-w-[820px]"
         :style="{ borderRadius: roundedStyle, borderWidth: borderStyle }"
     >
         <img
@@ -72,6 +72,18 @@ const borderStyle = computed<string>(
                 <div
                     class="drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)] flex flex-col gap-1"
                 >
+                    <div
+                        class="text-[3rem] leading-[3rem]"
+                        v-if="encounterCount !== 1"
+                    >
+                        Progress
+                        {{
+                            currentEncounter?.isKilled
+                                ? currentEncounterIndex + 1
+                                : currentEncounterIndex
+                        }}
+                        / {{ encounterCount }}
+                    </div>
                     <div class="text-[3rem] leading-[3rem]" v-if="!isCleared">
                         Best pull
                     </div>
@@ -97,6 +109,13 @@ const borderStyle = computed<string>(
                         : 'bg-black bg-opacity-60'
                 ]"
             >
+                <div
+                    class="text-4xl drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)] text-center"
+                    v-if="!currentEncounter?.composition"
+                >
+                    HYPE (ﾉ◕ヮ◕)ﾉ*:・ﾟ✧
+                </div>
+
                 <div
                     class="flex flex-wrap w-full relative"
                     v-for="role in currentEncounter?.composition?.roles"

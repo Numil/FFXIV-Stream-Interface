@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const { fightIDsPerReports } = useRace(60000)
+const fightId = (useRoute().query.fightId as string) || undefined
+
+const { fightIDsPerReports } = useRace(fightId, 60000)
 
 const { deathCounts } = useDeathsCounter(fightIDsPerReports)
 </script>

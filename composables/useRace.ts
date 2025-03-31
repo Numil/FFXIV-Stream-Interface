@@ -1,10 +1,19 @@
 import { gql } from 'graphql-request'
+import type { APIResponse } from '~/interfaces/API'
+import type {
+    Encounter,
+    ProgressRaceData,
+    ProgressRaceDataGraph,
+    Pull
+} from '~/interfaces/Race'
 
-export default (delay: number = 30000) => {
+export default (zoneId?: string, delay: number = 30000) => {
     const authToken = useAuthToken()
     const guildId = useRuntimeConfig().public.guildId
 
     const currentEncounter = ref<Encounter>()
+    const encounterCount = ref<number>(0)
+    const currentEncounterIndex = ref<number>(0)
     const lastPull = ref<Pull>()
 
     const fightIDsPerReports = ref<{ [key: string]: number[] }>({})
@@ -12,7 +21,9 @@ export default (delay: number = 30000) => {
     const raceDocument = gql`
         query {
             progressRaceData {
-                progressRace(guildID: ${guildId})
+                progressRace(guildID: ${guildId}${
+                    zoneId ? `, zoneID: ${zoneId}` : ''
+                })
             }
         }
     `
@@ -37,6 +48,11 @@ export default (delay: number = 30000) => {
 
         if (progressRace) {
             currentEncounter.value = progressRace.encounters.find(
+                (encounter) => encounter.id === progressRace.currentEncounterId
+            )
+
+            encounterCount.value = progressRace.encounters.length
+            currentEncounterIndex.value = progressRace.encounters.findIndex(
                 (encounter) => encounter.id === progressRace.currentEncounterId
             )
 
@@ -86,6 +102,8 @@ export default (delay: number = 30000) => {
 
     return {
         currentEncounter,
+        currentEncounterIndex,
+        encounterCount,
         fightIDsPerReports,
         lastPull
     }

@@ -1,28 +1,28 @@
-interface FightIDsWithReport {
+export interface FightIDsWithReport {
     [key: string]: number[]
 }
 
-interface ReportDataObject {
+export interface ReportDataObject {
     reportData: ReportData
 }
 
-interface ReportData {
+export interface ReportData {
     report: Report
 }
 
-interface Report {
+export interface Report {
     table: Table
 }
 
-interface Table {
+export interface Table {
     data: TableData
 }
 
-interface TableData {
+export interface TableData {
     entries: Entry[]
 }
 
-interface Entry {
+export interface Entry {
     name: string
     id: number
     guid: number
@@ -38,7 +38,7 @@ interface Entry {
     killingBlow: KillingBlow
 }
 
-interface Damage {
+export interface Damage {
     total: number
     totalReduced: number
     activeTime: number
@@ -48,21 +48,21 @@ interface Damage {
     sources: DamageSource[]
 }
 
-interface DamageAbility {
+export interface DamageAbility {
     name: string
     total: number
     totalReduced?: number
     type: number
 }
 
-interface DamageSource {
+export interface DamageSource {
     name: string
     total: number
     totalReduced?: number
     type: string
 }
 
-interface Healing {
+export interface Healing {
     total: number
     totalReduced: number
     activeTime: number
@@ -80,21 +80,21 @@ interface Healing {
     taken: any[]
 }
 
-interface HealingAbility {
+export interface HealingAbility {
     name: string
     total: number
     totalReduced?: number // Optional, since not all abilities have this
     type: number
 }
 
-interface HealingSource {
+export interface HealingSource {
     name: string
     total: number
     totalReduced?: number // Optional, since not all sources have this
     type: string
 }
 
-interface AbilityEvent {
+export interface AbilityEvent {
     timestamp: number
     type: string
     sourceID: number
@@ -113,14 +113,14 @@ interface AbilityEvent {
     multiplier: number
 }
 
-interface Ability {
+export interface Ability {
     name: string
     guid: number
     type: number
     abilityIcon: string
 }
 
-interface KillingBlow {
+export interface KillingBlow {
     name: string
     guid: number
     type: number

@@ -1,3 +1,3 @@
-interface APIResponse<T> {
+export interface APIResponse<T> {
     data: T
 }
