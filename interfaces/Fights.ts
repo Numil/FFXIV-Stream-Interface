@@ -35,5 +35,17 @@ export const Fights: FightImages[] = [
             '/ARCLW/M3_boss.jpg',
             '/ARCLW/M4_boss.jpg'
         ]
+    },
+    {
+        id: '53',
+        name: 'TOP',
+        phases: [
+            '/TOP/phase1.jpg',
+            '/TOP/phase2.jpg',
+            '/TOP/phase3.png',
+            '/TOP/phase4.jpg',
+            '/TOP/phase5.jpg',
+            '/TOP/phase6.jpg'
+        ]
     }
 ]
