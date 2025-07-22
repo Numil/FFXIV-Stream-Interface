@@ -40,12 +40,12 @@ export const Fights: FightImages[] = [
         id: '53',
         name: 'TOP',
         phases: [
-            '/TOP/phase1.jpg',
+            '/TOP/phase1.png',
             '/TOP/phase2.jpg',
             '/TOP/phase3.png',
-            '/TOP/phase4.jpg',
-            '/TOP/phase5.jpg',
-            '/TOP/phase6.jpg'
+            '/TOP/phase4.png',
+            '/TOP/phase5.png',
+            '/TOP/phase6.png'
         ]
     }
 ]
