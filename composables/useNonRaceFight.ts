@@ -26,7 +26,7 @@ export default (zoneId: string, encounterId: string, delay: number) => {
                             bossPercentage
                             lastPhase
                             id
-                            kill
+                            endTime
                         }
                     }
                 }
@@ -63,6 +63,12 @@ export default (zoneId: string, encounterId: string, delay: number) => {
             .map((report) => report.fights)
             .flat()
 
+        // dedupe end fight times
+        const dedupedFights = mergedFights.filter(
+            (fight, index, self) =>
+                index === self.findIndex((t) => t.endTime === fight.endTime)
+        )
+
         const compositionResponse = await $fetch<APIResponse<PlayerDetailsDTO>>(
             `/fflogs/api/v2/client`,
             {
@@ -73,13 +79,13 @@ export default (zoneId: string, encounterId: string, delay: number) => {
                 },
                 body: JSON.stringify({
                     query: getComposition(
-                        mergedFights[mergedFights.length - 1].id!
+                        dedupedFights[dedupedFights.length - 1].id!
                     )
                 })
             }
         )
 
-        const sortedFights = mergedFights
+        const sortedFights = dedupedFights
             .sort((a, b) => b.bossPercentage - a.bossPercentage)
             .sort((a, b) => b.lastPhase - a.lastPhase)
 

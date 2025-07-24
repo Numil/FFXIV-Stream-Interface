@@ -2,6 +2,7 @@ export interface Fight {
     bossPercentage: number
     lastPhase: number
     killed: boolean
+    endTime: number
     id: number
 }
 
