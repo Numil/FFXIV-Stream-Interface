@@ -1,10 +1,16 @@
-export interface FightImages {
+export interface Fight {
     id: string
     name: string
     phases: string[]
+    customPhaseStyles?: {
+        phase?: number
+        theme?: 'light' | 'dark'
+        pullJustify?: 'justify-end' | 'justify-between'
+        pullPosition?: 'self-end' | 'self-start'
+    }[]
 }
 
-export const Fights: FightImages[] = [
+export const Fights: Fight[] = [
     {
         id: '65',
         name: 'FRU',
@@ -37,7 +43,7 @@ export const Fights: FightImages[] = [
         ]
     },
     {
-        id: '53',
+        id: '59',
         name: 'TOP',
         phases: [
             '/TOP/phase1.png',
@@ -46,6 +52,24 @@ export const Fights: FightImages[] = [
             '/TOP/phase4.png',
             '/TOP/phase5.png',
             '/TOP/phase6.png'
+        ],
+        customPhaseStyles: [
+            {
+                phase: 2,
+                theme: 'light'
+            },
+            {
+                phase: 3,
+                pullPosition: 'self-end'
+            },
+            {
+                phase: 4,
+                pullPosition: 'self-end'
+            },
+            {
+                phase: 5,
+                pullPosition: 'self-end'
+            }
         ]
     }
 ]
