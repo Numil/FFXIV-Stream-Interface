@@ -34,12 +34,12 @@ export default (zoneId: string, encounterId: string, delay: number) => {
         }
     `
 
-    const getComposition = (fightID: number) => gql`
+    const getComposition = (fightID: number, endTime: number) => gql`
         query {
             reportData {
                 reports(guildID: ${guildId}, zoneID: ${zoneId}) {
                     data {
-                        playerDetails(fightIDs: ${fightID}, encounterID: ${encounterId})
+                        playerDetails(fightIDs: ${fightID}, encounterID: ${encounterId}, endTime: ${endTime})
                     }
                 }
             }
@@ -69,6 +69,7 @@ export default (zoneId: string, encounterId: string, delay: number) => {
                 index === self.findIndex((t) => t.endTime === fight.endTime)
         )
 
+        const lastFight = dedupedFights[dedupedFights.length - 1]
         const compositionResponse = await $fetch<APIResponse<PlayerDetailsDTO>>(
             `/fflogs/api/v2/client`,
             {
@@ -78,9 +79,7 @@ export default (zoneId: string, encounterId: string, delay: number) => {
                     Authorization: `Bearer ${authToken.value}`
                 },
                 body: JSON.stringify({
-                    query: getComposition(
-                        dedupedFights[dedupedFights.length - 1].id!
-                    )
+                    query: getComposition(lastFight.id!, lastFight.endTime!)
                 })
             }
         )
@@ -96,7 +95,9 @@ export default (zoneId: string, encounterId: string, delay: number) => {
         isCleared.value = sortedFights.some((fight) => fight.killed)
 
         composition.value =
-            compositionResponse.data.reportData.reports.data[0].playerDetails.data.playerDetails
+            compositionResponse.data.reportData.reports.data.find(
+                (d) => !Array.isArray(d.playerDetails.data.playerDetails)
+            )?.playerDetails.data.playerDetails || null
     }
 
     onMounted(() => {
