@@ -86,7 +86,7 @@ export default (zoneId: string, encounterId: string, delay: number) => {
         )
 
         const sortedFights = dedupedFights
-            .sort((a, b) => b.bossPercentage - a.bossPercentage)
+            .sort((a, b) => a.bossPercentage - b.bossPercentage)
             .sort((a, b) => b.lastPhase - a.lastPhase)
 
         bestPullPercent.value = sortedFights[0].bossPercentage

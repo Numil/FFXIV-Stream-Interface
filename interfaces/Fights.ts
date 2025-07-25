@@ -56,6 +56,7 @@ export const Fights: Fight[] = [
         customPhaseStyles: [
             {
                 phase: 2,
+                pullJustify: 'justify-end',
                 theme: 'light'
             },
             {
