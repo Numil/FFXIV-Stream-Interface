@@ -68,7 +68,7 @@ const borderStyle = computed<string>(
                         class="text-[3rem] leading-[3rem]"
                         v-if="phasesNumber !== 1"
                     >
-                        Best phase {{ bestPhase }}
+                        Phase {{ bestPhase }}
                     </div>
                     <div class="text-[3rem] leading-[3rem]" v-if="!isCleared">
                         Best pull
