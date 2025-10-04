@@ -1,0 +1,33 @@
+services:
+    stream-interface:
+        restart: unless-stopped
+        image: ghcr.io/numil/ffxiv-stream-interface:main
+        container_name: stream-interface
+        env_file:
+            - .env
+        environment:
+            - PORT=3000
+            - NODE_ENV=production
+        networks:
+            - frontend
+        volumes:
+            - database:/database
+        command: ['node', '.output/server/index.mjs']
+        labels:
+            - 'traefik.enable=true'
+            - 'traefik.http.routers.stream-interface.rule=Host(`tracker.numil.fr`)'
+            - 'traefik.http.routers.stream-interface.entrypoints=websecure'
+            - 'traefik.http.routers.stream-interface.tls.certresolver=tlsresolver'
+            - 'traefik.http.routers.stream-interface.service=stream-interface'
+            - 'traefik.http.services.stream-interface.loadbalancer.server.port=3000'
+            - 'com.centurylinklabs.watchtower.enable=true'
+
+volumes:
+    database:
+        name: database
+        external: true
+
+networks:
+    frontend:
+        name: frontend
+        external: true
