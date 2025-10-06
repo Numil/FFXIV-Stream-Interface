@@ -35,6 +35,10 @@ const numberOfPullsSincePB = computed(() => {
     console.log(bestPullIndex)
     return data.value?.slice(bestPullIndex).length
 })
+
+const maxPhase = computed(() => {
+    return route.query.phases ? Number(route.query.phases) : Math.max(...data.value?.map(fight => fight.lastPhase) || [])
+})
 </script>
 
 <template>
@@ -67,5 +71,14 @@ const numberOfPullsSincePB = computed(() => {
                 is-stats
             />
         </UCard>
+        <PullGraph
+            :data="data?.map((fight, index) => ({
+                phase: fight.lastPhase,
+                count: index + 1,
+                pullPercent: ((fight.bossPercentage + (fight.lastPhase - 1) * 100)/100) +1
+            })) || []"
+            :max-phase="maxPhase"
+            class="col-span-3"
+        />
     </UPageGrid>
 </template>
