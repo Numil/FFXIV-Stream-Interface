@@ -7,5 +7,7 @@ const { deathCounts } = useDeathsCounter(fightIDsPerReports)
 </script>
 
 <template>
-    {{ deathCounts }}
+    <div>
+        {{ deathCounts }}
+    </div>
 </template>

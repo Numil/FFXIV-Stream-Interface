@@ -1,6 +1,6 @@
 import { defineEventHandler, proxyRequest } from 'h3'
 
-export default defineEventHandler((event: any) => {
+export default defineEventHandler((event) => {
     let { originalUrl } = event.node.req
 
     if (originalUrl.indexOf('fflogs') > 0) {

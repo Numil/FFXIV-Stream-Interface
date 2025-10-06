@@ -7,12 +7,12 @@ const { zoneId, encounterId, phases } = route.query
 
 const phasesNumber = Number(phases)
 
-const { bestPullPercent, bestPhase, isCleared, pullCount, composition } =
-    useNonRaceFight(zoneId as string, encounterId as string, 100000)
+const { bestPullPercent, bestPhase, isCleared, pullCount, composition }
+    = useNonRaceFight(zoneId as string, encounterId as string, 100000)
 
 const fightId = (useRoute().query.zoneId as string) || undefined
 
-const fightStyleData = Fights.find((fight) => fight.id === fightId)
+const fightStyleData = Fights.find(fight => fight.id === fightId)
 const fightPhases = fightStyleData?.phases || []
 
 const phaseImageLink = computed<string | undefined>(() => {
@@ -76,7 +76,10 @@ const borderStyle = computed<string>(
                     >
                         Phase {{ bestPhase }}
                     </div>
-                    <div v-if="!isCleared" class="text-[3rem] leading-[3rem]">
+                    <div
+                        v-if="!isCleared"
+                        class="text-[3rem] leading-[3rem]"
+                    >
                         Best pull
                     </div>
                     <span
@@ -85,7 +88,10 @@ const borderStyle = computed<string>(
                     >
                         {{ bestPullPercent }} %
                     </span>
-                    <span v-else class="text-[3rem] leading-[3rem]">
+                    <span
+                        v-else
+                        class="text-[3rem] leading-[3rem]"
+                    >
                         Cleared
                     </span>
                     <div class="text-[2rem] leading-[2rem]">

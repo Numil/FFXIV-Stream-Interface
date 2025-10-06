@@ -4,8 +4,8 @@ import { JobImages } from '~~/shared/types/UI'
 
 const fightId = (useRoute().query.fightId as string) || undefined
 
-const { currentEncounter, currentEncounterIndex, encounterCount } =
-    useRace(fightId)
+const { currentEncounter, currentEncounterIndex, encounterCount }
+    = useRace(fightId)
 
 const pullCount = computed<number | undefined>(
     () => currentEncounter.value?.pullCount
@@ -21,7 +21,7 @@ const bestPhase = computed<number>(
 
 const isCleared = computed<boolean>(() => !!currentEncounter.value?.isKilled)
 
-const fightImages = Fights.find((fight) => fight.id === fightId)?.phases || []
+const fightImages = Fights.find(fight => fight.id === fightId)?.phases || []
 
 const phaseImageLink = computed<string | undefined>(() => {
     if (fightImages.length === 0) return 'clear.png'
@@ -82,7 +82,10 @@ const borderStyle = computed<string>(
                         }}
                         / {{ encounterCount }}
                     </div>
-                    <div v-if="!isCleared" class="text-[3rem] leading-[3rem]">
+                    <div
+                        v-if="!isCleared"
+                        class="text-[3rem] leading-[3rem]"
+                    >
                         Best pull
                     </div>
                     <span
@@ -91,7 +94,10 @@ const borderStyle = computed<string>(
                     >
                         {{ bestPullPercent }}
                     </span>
-                    <span v-else class="text-[3rem] leading-[3rem]">
+                    <span
+                        v-else
+                        class="text-[3rem] leading-[3rem]"
+                    >
                         Cleared
                     </span>
                     <div class="text-[2rem] leading-[2rem]">

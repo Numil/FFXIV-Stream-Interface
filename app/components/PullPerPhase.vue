@@ -27,8 +27,13 @@ const yFormatter = (index: number) => {
 </script>
 
 <template>
-    <UCard class="col-span-3" variant="soft">
-        <template #header>Pulls per phase</template>
+    <UCard
+        class="col-span-3"
+        variant="soft"
+    >
+        <template #header>
+            Pulls per phase
+        </template>
 
         <ClientOnly>
             <BarChart
@@ -41,7 +46,10 @@ const yFormatter = (index: number) => {
                 :y-axis="['numberOfPull']"
             />
 
-            <UCard v-else class="w-full animate-pulse bg-accented h-[250px]" />
+            <UCard
+                v-else
+                class="w-full animate-pulse bg-accented h-[250px]"
+            />
         </ClientOnly>
     </UCard>
 </template>

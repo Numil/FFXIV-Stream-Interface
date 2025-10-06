@@ -70,12 +70,12 @@ export default (fightIDsPerReports: Ref<FightIDsWithReport>) => {
 
             changedReports.forEach((reportCode) => {
                 if (!fightIDsPerReports.value[reportCode]) return
-                
+
                 newFightIDsPerReports[reportCode] = fightIDsPerReports.value[
                     reportCode
                 ].filter(
                     fightID =>
-                        !Object.prototype.hasOwnProperty.call(previousFightIDsPerReports, 
+                        !Object.prototype.hasOwnProperty.call(previousFightIDsPerReports,
                             reportCode
                         )
                         || !previousFightIDsPerReports[reportCode]?.includes(

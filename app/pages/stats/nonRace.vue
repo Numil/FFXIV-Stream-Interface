@@ -36,8 +36,8 @@ const numberOfPullsSincePB = computed(() => {
     console.log(data.value)
     const bestPullIndex = data.value?.findIndex((fight) => {
         return (
-            fight.lastPhase === bestPhase.value &&
-            fight.bossPercentage === bestPullPercent.value
+            fight.lastPhase === bestPhase.value
+            && fight.bossPercentage === bestPullPercent.value
         )
     })
 
@@ -55,11 +55,20 @@ const numberOfPullsSincePB = computed(() => {
             :pull-count="pullCount"
             :number-of-pulls-since-p-b="numberOfPullsSincePB"
         />
-        <UCard v-if="composition" variant="soft" class="col-span-3">
+        <UCard
+            v-if="composition"
+            variant="soft"
+            class="col-span-3"
+        >
             <template #header>
-                <h1 class="text-2xl font-bold">Composition</h1>
+                <h1 class="text-2xl font-bold">
+                    Composition
+                </h1>
             </template>
-            <PlayerComposition :composition is-stats />
+            <PlayerComposition
+                :composition
+                is-stats
+            />
         </UCard>
     </UPageGrid>
 </template>
