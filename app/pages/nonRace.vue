@@ -33,7 +33,7 @@ const borderStyle = computed<string>(
 <template>
     <div
         v-if="bestPhase"
-        class="relative flex flex-col w-fit h-fit border-slate-200 border-opacity-60 overflow-hidden min-w-[820px]"
+        class="relative flex flex-col w-fit h-fit border-slate-200/60 overflow-hidden min-w-[820px]"
         :style="{ borderRadius: roundedStyle, borderWidth: borderStyle }"
         @click="
             navigateTo({
@@ -63,8 +63,8 @@ const borderStyle = computed<string>(
                     fightStyleData?.customPhaseStyles?.find(
                         (style) => style.phase === bestPhase
                     )?.theme === 'light'
-                        ? 'bg-white bg-opacity-20'
-                        : 'bg-black bg-opacity-60'
+                        ? 'bg-white/20'
+                        : 'bg-black/60'
                 ]"
             >
                 <div
@@ -100,8 +100,8 @@ const borderStyle = computed<string>(
                     fightStyleData?.customPhaseStyles?.find(
                         (style) => style.phase === bestPhase
                     )?.theme === 'light'
-                        ? 'bg-white bg-opacity-20'
-                        : 'bg-black bg-opacity-60'
+                        ? 'bg-white/20'
+                        : 'bg-black/60'
                 ]"
             >
                 <div

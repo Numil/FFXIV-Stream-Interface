@@ -43,7 +43,7 @@ const borderStyle = computed<string>(
 <template>
     <div
         v-if="currentEncounter"
-        class="relative flex flex-col w-fit h-fit border-slate-200 border-opacity-60 overflow-hidden min-w-[820px]"
+        class="relative flex flex-col w-fit h-fit border-slate-200/60 overflow-hidden min-w-[820px]"
         :style="{ borderRadius: roundedStyle, borderWidth: borderStyle }"
     >
         <NuxtImg
@@ -64,9 +64,7 @@ const borderStyle = computed<string>(
                     {
                         'self-end': bestPhase === 3
                     },
-                    bestPhase === 4
-                        ? 'bg-white bg-opacity-20'
-                        : 'bg-black bg-opacity-60'
+                    bestPhase === 4 ? 'bg-white/20' : 'bg-black/60'
                 ]"
             >
                 <div
@@ -103,11 +101,7 @@ const borderStyle = computed<string>(
             </div>
             <div
                 class="flex flex-col gap-2 px-4 py-2 rounded-2xl justify-end"
-                :class="[
-                    bestPhase === 4
-                        ? 'bg-white bg-opacity-20'
-                        : 'bg-black bg-opacity-60'
-                ]"
+                :class="[bestPhase === 4 ? 'bg-white/20' : 'bg-black/60']"
             >
                 <div
                     v-if="!currentEncounter?.composition"
