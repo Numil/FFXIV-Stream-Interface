@@ -16,7 +16,7 @@ const fightStyleData = Fights.find(fight => fight.id === fightId)
 const fightPhases = fightStyleData?.phases || []
 
 const phaseImageLink = computed<string | undefined>(() => {
-    if (fightPhases.length === 0) return 'clear.png'
+    if (fightPhases.length === 0 || !bestPhase.value) return 'clear.png'
 
     return isCleared.value ? 'clear.png' : fightPhases[bestPhase.value - 1]
 })

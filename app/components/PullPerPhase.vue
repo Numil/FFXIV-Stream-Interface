@@ -32,7 +32,9 @@ const yFormatter = (index: number) => {
         variant="soft"
     >
         <template #header>
-            Pulls per phase
+            <h1 class="text-2xl font-bold">
+                Pulls per phase
+            </h1>
         </template>
 
         <ClientOnly>
@@ -48,7 +50,7 @@ const yFormatter = (index: number) => {
 
             <UCard
                 v-else
-                class="w-full animate-pulse bg-accented h-[250px]"
+                class="w-full animate-pulse bg-accented h-[290px]"
             />
         </ClientOnly>
     </UCard>

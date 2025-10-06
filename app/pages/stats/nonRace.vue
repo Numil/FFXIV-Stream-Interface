@@ -6,23 +6,14 @@ definePageMeta({
 const route = useRoute()
 const { zoneId, encounterId } = route.query
 
-const { bestPhase, bestPullPercent, pullCount, composition } = useNonRaceFight(
+const { bestPhase, bestPullPercent, pullCount, composition, data } = useNonRaceFight(
     zoneId as string,
     encounterId as string,
-    3000000
+    0
 )
-
-const data = useState<FightDTO[] | undefined>(
-    `nonRaceFight-${zoneId}-${encounterId}`
-)
-
-const reversedData = computed(() => {
-    const arrayCopy = data.value?.slice()
-    return arrayCopy?.reverse()
-})
 
 const numberOfPullPerPhase = computed(() => {
-    return reversedData.value?.reduce(
+    return data.value?.reduce(
         (acc: Record<number, number>, fight: FightDTO) => {
             acc[fight.lastPhase] = (acc[fight.lastPhase] || 0) + 1
             return acc
@@ -54,9 +45,9 @@ const numberOfPullsSincePB = computed(() => {
             :best-pull-percent="bestPullPercent"
             :pull-count="pullCount"
             :number-of-pulls-since-p-b="numberOfPullsSincePB"
+            :loading="!bestPhase"
         />
         <UCard
-            v-if="composition"
             variant="soft"
             class="col-span-3"
         >
@@ -65,7 +56,13 @@ const numberOfPullsSincePB = computed(() => {
                     Composition
                 </h1>
             </template>
+
+            <div
+                v-if="!composition"
+                class="animate-pulse rounded-xl col-span-3 bg-accented h-[180px]"
+            />
             <PlayerComposition
+                v-else
                 :composition
                 is-stats
             />

@@ -1,21 +1,14 @@
 import type { APIResponse } from '#shared/types/API'
 import type {
     FightDTO,
-    PlayerDetails,
     PlayerDetailsDTO
 } from '#shared/types/FightDTO'
 import { gql } from 'graphql-request'
 
-export default (zoneId: string, encounterId: string, delay: number) => {
+export default (zoneId: string, encounterId: string, delay: number = 30000) => {
     const authToken = useAuthToken()
     const guildId = useRuntimeConfig().public.guildId
-    const bestPullPercent = ref(0)
-    const bestPhase = ref(0)
-    const isCleared = ref(false)
     const interval = ref<ReturnType<typeof setInterval> | undefined>()
-    const pullCount = ref(0)
-
-    const composition = ref<PlayerDetails | null>(null)
 
     const raceDocument = gql`
         query {
@@ -46,7 +39,37 @@ export default (zoneId: string, encounterId: string, delay: number) => {
         }
     `
 
-    const fetchNonRaceFight = async () => {
+    const lastFight = computed(() => {
+        return data.value?.[data.value.length - 1]
+    })
+
+    const sortedFights = computed(() => {
+        if (!data.value) return []
+
+        return [...data.value]?.sort((a, b) => a.endTime - b.endTime)
+    })
+
+    const bestPullFight = computed(() => {
+        return [...sortedFights.value].sort((a, b) => a.bossPercentage - b.bossPercentage).sort((a, b) => b.lastPhase - a.lastPhase)[0]
+    })
+
+    const bestPhase = computed(() => {
+        return bestPullFight.value?.lastPhase
+    })
+
+    const bestPullPercent = computed(() => {
+        return bestPullFight.value?.bossPercentage
+    })
+
+    const pullCount = computed(() => {
+        return sortedFights.value.length
+    })
+
+    const isCleared = computed(() => {
+        return sortedFights.value.some(fight => fight.killed)
+    })
+
+    const { refresh, data } = useAsyncData(async () => {
         const nonRaceFightResponse = await $fetch<APIResponse<FightDTO>>(
             `/fflogs/api/v2/client`,
             {
@@ -67,11 +90,14 @@ export default (zoneId: string, encounterId: string, delay: number) => {
         const dedupedFights = mergedFights.filter(
             (fight, index, self) =>
                 index === self.findIndex(t => t.endTime === fight.endTime)
-        )
+        ).reverse()
 
-        useState(`nonRaceFight-${zoneId}-${encounterId}`, () => JSON.parse(JSON.stringify(dedupedFights)))
+        return dedupedFights
+    })
 
-        const lastFight = dedupedFights[dedupedFights.length - 1]!
+    const { data: composition } = useAsyncData('composition', async () => {
+        if (!lastFight.value || !lastFight.value.id || !lastFight.value.endTime) return null
+
         const compositionResponse = await $fetch<APIResponse<PlayerDetailsDTO>>(
             `/fflogs/api/v2/client`,
             {
@@ -81,38 +107,28 @@ export default (zoneId: string, encounterId: string, delay: number) => {
                     'Authorization': `Bearer ${authToken.value}`
                 },
                 body: JSON.stringify({
-                    query: getComposition(lastFight.id!, lastFight.endTime!)
+                    query: getComposition(lastFight.value.id, lastFight.value.endTime)
                 })
             }
         )
 
-        const sortedFights = dedupedFights
-            .sort((a, b) => a.bossPercentage - b.bossPercentage)
-            .sort((a, b) => b.lastPhase - a.lastPhase)
-
-        if (sortedFights.length === 0) return
-
-        bestPullPercent.value = sortedFights[0]!.bossPercentage
-        bestPhase.value = sortedFights[0]!.lastPhase
-        pullCount.value = sortedFights.length
-
-        isCleared.value = sortedFights.some(fight => fight.killed)
-
-        composition.value
-            = compositionResponse.data.reportData.reports.data.find(
-                d => !Array.isArray(d.playerDetails.data.playerDetails)
-            )?.playerDetails.data.playerDetails || null
-    }
+        return compositionResponse.data.reportData.reports.data.find(
+            d => !Array.isArray(d.playerDetails.data.playerDetails)
+        )?.playerDetails.data.playerDetails || null
+    }, {
+        watch: [() => lastFight.value?.id]
+    })
 
     onMounted(() => {
-        fetchNonRaceFight()
-        interval.value = setInterval(async () => {
-            await fetchNonRaceFight()
-        }, delay)
+        if (delay !== 0) {
+            interval.value = setInterval(async () => {
+                await refresh()
+            }, delay)
+        }
     })
 
     onUnmounted(() => {
-        if (interval) {
+        if (interval && delay !== 0) {
             clearInterval(interval.value)
         }
     })
@@ -122,6 +138,7 @@ export default (zoneId: string, encounterId: string, delay: number) => {
         bestPhase,
         isCleared,
         pullCount,
-        composition
+        composition,
+        data
     }
 }
