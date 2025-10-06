@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Fights } from '~~/shared/types/Fights'
-import { JobImages } from '~~/shared/types/UI'
+
 const route = useRoute()
 
 const { zoneId, encounterId, phases } = route.query
@@ -42,7 +42,7 @@ const borderStyle = computed<string>(
             })
         "
     >
-        <img
+        <NuxtImg
             class="absolute aspect-video object-cover h-[512px]"
             :src="phaseImageLink"
         />
@@ -71,21 +71,21 @@ const borderStyle = computed<string>(
                     class="drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)] flex flex-col gap-1"
                 >
                     <div
-                        class="text-[3rem] leading-[3rem]"
                         v-if="phasesNumber !== 1"
+                        class="text-[3rem] leading-[3rem]"
                     >
                         Phase {{ bestPhase }}
                     </div>
-                    <div class="text-[3rem] leading-[3rem]" v-if="!isCleared">
+                    <div v-if="!isCleared" class="text-[3rem] leading-[3rem]">
                         Best pull
                     </div>
                     <span
-                        class="text-[3rem] leading-[3rem]"
                         v-if="bestPhase !== undefined && !isCleared"
+                        class="text-[3rem] leading-[3rem]"
                     >
                         {{ bestPullPercent }} %
                     </span>
-                    <span class="text-[3rem] leading-[3rem]" v-else>
+                    <span v-else class="text-[3rem] leading-[3rem]">
                         Cleared
                     </span>
                     <div class="text-[2rem] leading-[2rem]">
@@ -105,43 +105,13 @@ const borderStyle = computed<string>(
                 ]"
             >
                 <div
-                    class="text-4xl drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)] text-center"
                     v-if="!bestPhase"
+                    class="text-4xl drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)] text-center"
                 >
                     HYPE (ﾉ◕ヮ◕)ﾉ*:・ﾟ✧
                 </div>
 
-                <div
-                    class="flex flex-wrap w-full relative"
-                    v-for="role in Object.keys(composition).sort((a, b) => {
-                        const order: Record<string, number> = {
-                            tanks: 0,
-                            healers: 1,
-                            dps: 2
-                        }
-                        return (order[a] ?? 3) - (order[b] ?? 3)
-                    })"
-                >
-                    <div class="flex gap-4 overflow-hidden">
-                        <div
-                            class="flex shrink-0 gap-2 items-center text-lg drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)]"
-                            v-for="player in composition[
-                                role as keyof typeof composition
-                            ]"
-                        >
-                            <img
-                                class="size-8"
-                                :src="
-                                    JobImages[
-                                        player.type as keyof typeof JobImages
-                                    ]
-                                "
-                                alt="player avatar"
-                            />
-                            {{ player.name }}
-                        </div>
-                    </div>
-                </div>
+                <PlayerComposition :composition />
             </div>
         </div>
     </div>

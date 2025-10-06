@@ -32,7 +32,7 @@ export default (fightIDsPerReports: Ref<FightIDsWithReport>) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${authToken.value}`
+                'Authorization': `Bearer ${authToken.value}`
             },
             body: JSON.stringify({
                 query: getDeathsDocument(reportCode, fightIDs)
@@ -41,6 +41,7 @@ export default (fightIDsPerReports: Ref<FightIDsWithReport>) => {
 
     const getDeathsData = async (value: FightIDsWithReport) => {
         for (const reportCode in value) {
+            if (!value[reportCode]) continue
             // We make chunks of 10 fight IDs to avoid hitting the API limit
             const fightIDsChunks = chunkFights(value[reportCode], 10)
 
@@ -48,8 +49,8 @@ export default (fightIDsPerReports: Ref<FightIDsWithReport>) => {
                 const response = await fetchFightsData(reportCode, chunk)
 
                 // We add the number of deaths events to the total
-                deathCounts.value +=
-                    response.data.reportData.report.table.data.entries.length
+                deathCounts.value
+                    += response.data.reportData.report.table.data.entries.length
             }
         }
     }
@@ -57,10 +58,10 @@ export default (fightIDsPerReports: Ref<FightIDsWithReport>) => {
     const onUpdatedReports = async () => {
         // We only get the reports that have new data
         const changedReports = Object.keys(fightIDsPerReports.value).filter(
-            (reportCode) =>
-                !previousFightIDsPerReports.hasOwnProperty(reportCode) ||
-                previousFightIDsPerReports[reportCode].length !==
-                    fightIDsPerReports.value[reportCode].length
+            reportCode =>
+                !Object.prototype.hasOwnProperty.call(previousFightIDsPerReports, reportCode)
+                || previousFightIDsPerReports[reportCode]?.length
+                !== fightIDsPerReports.value[reportCode]?.length
         )
 
         if (changedReports.length > 0) {
@@ -68,14 +69,16 @@ export default (fightIDsPerReports: Ref<FightIDsWithReport>) => {
             const newFightIDsPerReports: FightIDsWithReport = {}
 
             changedReports.forEach((reportCode) => {
+                if (!fightIDsPerReports.value[reportCode]) return
+                
                 newFightIDsPerReports[reportCode] = fightIDsPerReports.value[
                     reportCode
                 ].filter(
-                    (fightID) =>
-                        !previousFightIDsPerReports.hasOwnProperty(
+                    fightID =>
+                        !Object.prototype.hasOwnProperty.call(previousFightIDsPerReports, 
                             reportCode
-                        ) ||
-                        !previousFightIDsPerReports[reportCode].includes(
+                        )
+                        || !previousFightIDsPerReports[reportCode]?.includes(
                             fightID
                         )
                 )

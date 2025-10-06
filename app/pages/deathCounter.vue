@@ -6,4 +6,6 @@ const { fightIDsPerReports } = useRace(fightId, 60000)
 const { deathCounts } = useDeathsCounter(fightIDsPerReports)
 </script>
 
-<template>{{ deathCounts }}</template>
+<template>
+    {{ deathCounts }}
+</template>

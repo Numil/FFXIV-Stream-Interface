@@ -76,8 +76,8 @@ export interface Healing {
     totalADPS: number
     totalNDPS: number
     totalCDPS: number
-    given: any[]
-    taken: any[]
+    given: any[] // eslint-disable-line @typescript-eslint/no-explicit-any
+    taken: any[] // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 export interface HealingAbility {

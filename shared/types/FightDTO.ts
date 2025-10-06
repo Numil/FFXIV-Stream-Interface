@@ -1,4 +1,4 @@
-export interface Fight {
+export interface FightDTO {
     bossPercentage: number
     lastPhase: number
     killed: boolean
@@ -6,7 +6,7 @@ export interface Fight {
     id: number
 }
 
-export interface Player {
+export interface PlayerDTO {
     name: string
     id: number
     guid: number
@@ -14,9 +14,9 @@ export interface Player {
 }
 
 export interface PlayerDetails {
-    tanks: Player[]
-    dps: Player[]
-    healers: Player[]
+    tanks: PlayerDTO[]
+    dps: PlayerDTO[]
+    healers: PlayerDTO[]
 }
 
 export interface PlayerDetailsData {
@@ -27,20 +27,20 @@ export interface PlayerDetailsWrapper {
     data: PlayerDetailsData
 }
 
-export interface Report {
-    fights: Fight[]
+export interface ReportDTO {
+    fights: FightDTO[]
 }
 
 export interface ReportsData {
-    data: Report[]
+    data: ReportDTO[]
 }
 
-export interface ReportData {
+export interface ReportDataDTO {
     reports: ReportsData
 }
 
 export interface FightDTO {
-    reportData: ReportData
+    reportData: ReportDataDTO
 }
 
 export interface PlayerDetailsDTO {

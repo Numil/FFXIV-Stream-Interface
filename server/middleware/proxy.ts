@@ -1,4 +1,3 @@
-
 import { defineEventHandler, proxyRequest } from 'h3'
 
 export default defineEventHandler((event: any) => {
@@ -10,5 +9,4 @@ export default defineEventHandler((event: any) => {
 
         return proxyRequest(event, redirectTo)
     }
-
 })

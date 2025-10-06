@@ -53,32 +53,32 @@ export default (zoneId: string, encounterId: string, delay: number) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${authToken.value}`
+                    'Authorization': `Bearer ${authToken.value}`
                 },
                 body: JSON.stringify({ query: raceDocument })
             }
         )
 
         const mergedFights = nonRaceFightResponse.data.reportData.reports.data
-            .map((report) => report.fights)
+            .map(report => report.fights)
             .flat()
 
         // dedupe end fight times
         const dedupedFights = mergedFights.filter(
             (fight, index, self) =>
-                index === self.findIndex((t) => t.endTime === fight.endTime)
+                index === self.findIndex(t => t.endTime === fight.endTime)
         )
 
         useState(`nonRaceFight-${zoneId}-${encounterId}`, () => JSON.parse(JSON.stringify(dedupedFights)))
-        
-        const lastFight = dedupedFights[dedupedFights.length - 1]
+
+        const lastFight = dedupedFights[dedupedFights.length - 1]!
         const compositionResponse = await $fetch<APIResponse<PlayerDetailsDTO>>(
             `/fflogs/api/v2/client`,
             {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${authToken.value}`
+                    'Authorization': `Bearer ${authToken.value}`
                 },
                 body: JSON.stringify({
                     query: getComposition(lastFight.id!, lastFight.endTime!)
@@ -90,15 +90,17 @@ export default (zoneId: string, encounterId: string, delay: number) => {
             .sort((a, b) => a.bossPercentage - b.bossPercentage)
             .sort((a, b) => b.lastPhase - a.lastPhase)
 
-        bestPullPercent.value = sortedFights[0].bossPercentage
-        bestPhase.value = sortedFights[0].lastPhase
+        if (sortedFights.length === 0) return
+
+        bestPullPercent.value = sortedFights[0]!.bossPercentage
+        bestPhase.value = sortedFights[0]!.lastPhase
         pullCount.value = sortedFights.length
 
-        isCleared.value = sortedFights.some((fight) => fight.killed)
+        isCleared.value = sortedFights.some(fight => fight.killed)
 
-        composition.value =
-            compositionResponse.data.reportData.reports.data.find(
-                (d) => !Array.isArray(d.playerDetails.data.playerDetails)
+        composition.value
+            = compositionResponse.data.reportData.reports.data.find(
+                d => !Array.isArray(d.playerDetails.data.playerDetails)
             )?.playerDetails.data.playerDetails || null
     }
 

@@ -46,7 +46,7 @@ const borderStyle = computed<string>(
         class="relative flex flex-col w-fit h-fit border-slate-200 border-opacity-60 overflow-hidden min-w-[820px]"
         :style="{ borderRadius: roundedStyle, borderWidth: borderStyle }"
     >
-        <img
+        <NuxtImg
             class="absolute aspect-video object-cover h-[512px]"
             :src="phaseImageLink"
         />
@@ -73,8 +73,8 @@ const borderStyle = computed<string>(
                     class="drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)] flex flex-col gap-1"
                 >
                     <div
-                        class="text-[3rem] leading-[3rem]"
                         v-if="encounterCount !== 1"
+                        class="text-[3rem] leading-[3rem]"
                     >
                         Progress
                         {{
@@ -84,16 +84,16 @@ const borderStyle = computed<string>(
                         }}
                         / {{ encounterCount }}
                     </div>
-                    <div class="text-[3rem] leading-[3rem]" v-if="!isCleared">
+                    <div v-if="!isCleared" class="text-[3rem] leading-[3rem]">
                         Best pull
                     </div>
                     <span
-                        class="text-[3rem] leading-[3rem]"
                         v-if="bestPhase !== undefined && !isCleared"
+                        class="text-[3rem] leading-[3rem]"
                     >
                         {{ bestPullPercent }}
                     </span>
-                    <span class="text-[3rem] leading-[3rem]" v-else>
+                    <span v-else class="text-[3rem] leading-[3rem]">
                         Cleared
                     </span>
                     <div class="text-[2rem] leading-[2rem]">
@@ -110,22 +110,24 @@ const borderStyle = computed<string>(
                 ]"
             >
                 <div
-                    class="text-4xl drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)] text-center"
                     v-if="!currentEncounter?.composition"
+                    class="text-4xl drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)] text-center"
                 >
                     HYPE (ﾉ◕ヮ◕)ﾉ*:・ﾟ✧
                 </div>
 
                 <div
-                    class="flex flex-wrap w-full relative"
                     v-for="role in currentEncounter?.composition?.roles"
+                    :key="role.name"
+                    class="flex flex-wrap w-full relative"
                 >
                     <div class="flex gap-4 overflow-hidden">
                         <div
-                            class="flex shrink-0 gap-2 items-center text-lg drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)]"
                             v-for="player in role.players"
+                            :key="player.name"
+                            class="flex shrink-0 gap-2 items-center text-lg drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)]"
                         >
-                            <img
+                            <NuxtImg
                                 class="size-8"
                                 :src="
                                     JobImages[

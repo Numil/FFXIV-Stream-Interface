@@ -1,9 +1,10 @@
 <script setup lang="ts">
-const { numberOfPullPerPhase } = defineProps<{
-    numberOfPullPerPhase: Record<number, number>
+const { numberOfPullPerPhase = undefined } = defineProps<{
+    numberOfPullPerPhase?: Record<number, number>
 }>()
 
 const data = computed(() => {
+    if (!numberOfPullPerPhase) return undefined
     return Object.keys(numberOfPullPerPhase).map((phase) => {
         return {
             phase: phase,
@@ -15,7 +16,6 @@ const data = computed(() => {
 const chartCategories = computed(() => {
     return {
         numberOfPull: {
-            color: 'white',
             name: 'Number of Pull'
         }
     }
@@ -32,13 +32,16 @@ const yFormatter = (index: number) => {
 
         <ClientOnly>
             <BarChart
+                v-if="data"
                 :orientation="Orientation.Horizontal"
                 :data="data"
                 :height="250"
                 :categories="chartCategories"
                 :y-formatter="yFormatter"
-                :yAxis="['numberOfPull']"
+                :y-axis="['numberOfPull']"
             />
+
+            <UCard v-else class="w-full animate-pulse bg-accented h-[250px]" />
         </ClientOnly>
     </UCard>
 </template>

@@ -2,11 +2,9 @@
     <UPage>
         <UHeader title="Stats" />
         <UPageBody>
-            <UMain>
-                <UContainer>
-                    <NuxtPage />
-                </UContainer>
-            </UMain>
+            <UContainer>
+                <NuxtPage />
+            </UContainer>
         </UPageBody>
     </UPage>
 </template>

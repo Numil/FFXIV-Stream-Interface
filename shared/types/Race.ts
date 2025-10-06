@@ -78,15 +78,15 @@ export interface Player {
     itemLevel: number | null
     streamChannel: string | null
     streamViewers: number | null
-    talents: any[]
-    singleCustomPower: any | null
-    singleSecondaryCustomPower: any | null
-    customPowers: any[]
-    secondaryCustomPowers: any[]
-    gearItems: any[]
-    setGearItems: any[]
-    effectGearItems: any[]
-    talentTree: any | null
+    talents: any[] // eslint-disable-line @typescript-eslint/no-explicit-any
+    singleCustomPower: any | null // eslint-disable-line @typescript-eslint/no-explicit-any
+    singleSecondaryCustomPower: any | null // eslint-disable-line @typescript-eslint/no-explicit-any
+    customPowers: any[] // eslint-disable-line @typescript-eslint/no-explicit-any
+    secondaryCustomPowers: any[] // eslint-disable-line @typescript-eslint/no-explicit-any
+    gearItems: any[] // eslint-disable-line @typescript-eslint/no-explicit-any
+    setGearItems: any[] // eslint-disable-line @typescript-eslint/no-explicit-any
+    effectGearItems: any[] // eslint-disable-line @typescript-eslint/no-explicit-any
+    talentTree: any | null // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 export interface Pull {
@@ -98,7 +98,7 @@ export interface Pull {
     duration: number
     fightPercentage: number
     bestPercentForDisplay: string
-    lastPhase: any | null
+    lastPhase: any | null // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 export interface Region {

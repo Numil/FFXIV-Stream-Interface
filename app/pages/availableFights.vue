@@ -6,7 +6,10 @@ const fights = Fights
 
 <template>
     <div>
-        <div v-for="fight in fights" :key="fight.id">
+        <div
+            v-for="fight in fights"
+            :key="fight.id"
+        >
             {{ fight.name }} : {{ fight.id }}
         </div>
     </div>
