@@ -11,7 +11,7 @@ const { zoneId, encounterId } = route.query
 const { bestPhase, bestPullPercent, pullCount } = useNonRaceFight(
     zoneId as string,
     encounterId as string,
-    100000
+    3000000
 )
 
 const data = useState<Fight[] | undefined>(
