@@ -1,6 +1,6 @@
+import type { APIResponse } from '#shared/types/API'
+import type { FightIDsWithReport, ReportDataObject } from '#shared/types/Deaths'
 import { gql } from 'graphql-request'
-import type { APIResponse } from '~/interfaces/API'
-import type { FightIDsWithReport, ReportDataObject } from '~/interfaces/Deaths'
 
 export default (fightIDsPerReports: Ref<FightIDsWithReport>) => {
     const authToken = useAuthToken()

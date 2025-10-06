@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Fights } from '~/interfaces/Fights'
+import { Fights } from '~~/shared/types/Fights'
 
 const fights = Fights
 </script>

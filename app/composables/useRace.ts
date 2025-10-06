@@ -1,11 +1,11 @@
-import { gql } from 'graphql-request'
-import type { APIResponse } from '~/interfaces/API'
+import type { APIResponse } from '#shared/types/API'
 import type {
     Encounter,
     ProgressRaceData,
     ProgressRaceDataGraph,
     Pull
-} from '~/interfaces/Race'
+} from '#shared/types/Race'
+import { gql } from 'graphql-request'
 
 export default (zoneId?: string, delay: number = 30000) => {
     const authToken = useAuthToken()

@@ -1,10 +1,10 @@
-import { gql } from 'graphql-request'
-import type { APIResponse } from '~/interfaces/API'
+import type { APIResponse } from '#shared/types/API'
 import type {
     FightDTO,
     PlayerDetails,
     PlayerDetailsDTO
-} from '~/interfaces/FightDTO'
+} from '#shared/types/FightDTO'
+import { gql } from 'graphql-request'
 
 export default (zoneId: string, encounterId: string, delay: number) => {
     const authToken = useAuthToken()
@@ -69,6 +69,8 @@ export default (zoneId: string, encounterId: string, delay: number) => {
                 index === self.findIndex((t) => t.endTime === fight.endTime)
         )
 
+        useState(`nonRaceFight-${zoneId}-${encounterId}`, () => JSON.parse(JSON.stringify(dedupedFights)))
+        
         const lastFight = dedupedFights[dedupedFights.length - 1]
         const compositionResponse = await $fetch<APIResponse<PlayerDetailsDTO>>(
             `/fflogs/api/v2/client`,

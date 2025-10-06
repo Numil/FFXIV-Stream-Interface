@@ -1,4 +1,4 @@
-export interface Fight {
+export interface FightUI {
     id: string
     name: string
     phases: string[]
@@ -10,7 +10,7 @@ export interface Fight {
     }[]
 }
 
-export const Fights: Fight[] = [
+export const Fights: FightUI[] = [
     {
         id: '65',
         name: 'FRU',

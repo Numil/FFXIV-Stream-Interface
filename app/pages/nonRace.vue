@@ -1,34 +1,24 @@
 <script setup lang="ts">
-import { Fights } from '~/interfaces/Fights'
-import { JobImages } from '~/interfaces/UI'
+import { Fights } from '~~/shared/types/Fights'
+import { JobImages } from '~~/shared/types/UI'
+const route = useRoute()
 
-const fightId = (useRoute().query.fightId as string) || undefined
+const { zoneId, encounterId, phases } = route.query
 
-const { currentEncounter, currentEncounterIndex, encounterCount } =
-    useRace(fightId)
+const phasesNumber = Number(phases)
 
-const pullCount = computed<number | undefined>(
-    () => currentEncounter.value?.pullCount
-)
+const { bestPullPercent, bestPhase, isCleared, pullCount, composition } =
+    useNonRaceFight(zoneId as string, encounterId as string, 100000)
 
-const bestPullPercent = computed<string | undefined>(
-    () => currentEncounter.value?.bestPercentForDisplay
-)
+const fightId = (useRoute().query.zoneId as string) || undefined
 
-const bestPhase = computed<number>(
-    () => (currentEncounter.value?.bestPhaseIndex || 0) + 1
-)
-
-const isCleared = computed<boolean>(() => !!currentEncounter.value?.isKilled)
-
-const fightImages = Fights.find((fight) => fight.id === fightId)?.phases || []
+const fightStyleData = Fights.find((fight) => fight.id === fightId)
+const fightPhases = fightStyleData?.phases || []
 
 const phaseImageLink = computed<string | undefined>(() => {
-    if (fightImages.length === 0) return 'clear.png'
+    if (fightPhases.length === 0) return 'clear.png'
 
-    return encounterCount.value !== 1
-        ? fightImages[currentEncounterIndex.value]
-        : fightImages[bestPhase.value - 1]
+    return isCleared.value ? 'clear.png' : fightPhases[bestPhase.value - 1]
 })
 
 const roundedStyle = computed<string>(
@@ -42,9 +32,15 @@ const borderStyle = computed<string>(
 
 <template>
     <div
-        v-if="currentEncounter"
+        v-if="bestPhase"
         class="relative flex flex-col w-fit h-fit border-slate-200 border-opacity-60 overflow-hidden min-w-[820px]"
         :style="{ borderRadius: roundedStyle, borderWidth: borderStyle }"
+        @click="
+            navigateTo({
+                name: 'stats-nonRace',
+                query: useRoute().query
+            })
+        "
     >
         <img
             class="absolute aspect-video object-cover h-[512px]"
@@ -53,18 +49,20 @@ const borderStyle = computed<string>(
         <div
             class="h-[512px] flex p-4 gap-4 flex-col z-20 text-slate-50 font-extrabold uppercase radial-gradient"
             :class="[
-                bestPhase === 3 || bestPhase === 4
-                    ? 'justify-end'
-                    : 'justify-between'
+                fightStyleData?.customPhaseStyles?.find(
+                    (style) => style.phase === bestPhase
+                )?.pullJustify || 'justify-between'
             ]"
         >
             <div
                 class="flex px-3 py-2 rounded-2xl w-fit flex-col"
                 :class="[
-                    {
-                        'self-end': bestPhase === 3
-                    },
-                    bestPhase === 4
+                    fightStyleData?.customPhaseStyles?.find(
+                        (style) => style.phase === bestPhase
+                    )?.pullPosition,
+                    fightStyleData?.customPhaseStyles?.find(
+                        (style) => style.phase === bestPhase
+                    )?.theme === 'light'
                         ? 'bg-white bg-opacity-20'
                         : 'bg-black bg-opacity-60'
                 ]"
@@ -74,15 +72,9 @@ const borderStyle = computed<string>(
                 >
                     <div
                         class="text-[3rem] leading-[3rem]"
-                        v-if="encounterCount !== 1"
+                        v-if="phasesNumber !== 1"
                     >
-                        Progress
-                        {{
-                            currentEncounter?.isKilled
-                                ? currentEncounterIndex + 1
-                                : currentEncounterIndex
-                        }}
-                        / {{ encounterCount }}
+                        Phase {{ bestPhase }}
                     </div>
                     <div class="text-[3rem] leading-[3rem]" v-if="!isCleared">
                         Best pull
@@ -91,7 +83,7 @@ const borderStyle = computed<string>(
                         class="text-[3rem] leading-[3rem]"
                         v-if="bestPhase !== undefined && !isCleared"
                     >
-                        {{ bestPullPercent }}
+                        {{ bestPullPercent }} %
                     </span>
                     <span class="text-[3rem] leading-[3rem]" v-else>
                         Cleared
@@ -102,28 +94,40 @@ const borderStyle = computed<string>(
                 </div>
             </div>
             <div
+                v-if="composition"
                 class="flex flex-col gap-2 px-4 py-2 rounded-2xl justify-end"
                 :class="[
-                    bestPhase === 4
+                    fightStyleData?.customPhaseStyles?.find(
+                        (style) => style.phase === bestPhase
+                    )?.theme === 'light'
                         ? 'bg-white bg-opacity-20'
                         : 'bg-black bg-opacity-60'
                 ]"
             >
                 <div
                     class="text-4xl drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)] text-center"
-                    v-if="!currentEncounter?.composition"
+                    v-if="!bestPhase"
                 >
                     HYPE (ﾉ◕ヮ◕)ﾉ*:・ﾟ✧
                 </div>
 
                 <div
                     class="flex flex-wrap w-full relative"
-                    v-for="role in currentEncounter?.composition?.roles"
+                    v-for="role in Object.keys(composition).sort((a, b) => {
+                        const order: Record<string, number> = {
+                            tanks: 0,
+                            healers: 1,
+                            dps: 2
+                        }
+                        return (order[a] ?? 3) - (order[b] ?? 3)
+                    })"
                 >
                     <div class="flex gap-4 overflow-hidden">
                         <div
                             class="flex shrink-0 gap-2 items-center text-lg drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)]"
-                            v-for="player in role.players"
+                            v-for="player in composition[
+                                role as keyof typeof composition
+                            ]"
                         >
                             <img
                                 class="size-8"
