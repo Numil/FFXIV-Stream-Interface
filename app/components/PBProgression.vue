@@ -39,7 +39,7 @@ const getPullCountBetweenPBsText = (pullIndex: number, nextPullIndex: number) =>
     >
         <template #header>
             <h1 class="text-2xl font-bold">
-                Progress between PBs
+                Pulls between PBs
             </h1>
         </template>
         <div v-if="numberOfPullsInBetweenEachPB && !pullCount">
