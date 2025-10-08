@@ -1,11 +1,11 @@
 <script setup lang="ts">
 const { data } = defineProps<{
-    data: {
+    data?: {
         count: number
         pullPercent: number
         phase: number
     }[]
-    maxPhase: number
+    maxPhase?: number
 }>()
 
 const yFormatter = (tick: number) => {
@@ -14,31 +14,31 @@ const yFormatter = (tick: number) => {
 </script>
 
 <template>
-    <UCard
-        variant="soft"
-    >
-        <template
-            #header
-        >
-            <h1 class="text-2xl font-bold">
-                Pull Graph
-            </h1>
+    <UCard variant="soft">
+        <template #header>
+            <h1 class="text-2xl font-bold">Pull Graph</h1>
         </template>
-        <LineChart
-            :data="data"
-            :categories="{
-                pullPercent: {
-                    name: 'Pull Percent'
-                }
-            }"
-            :y-num-ticks="maxPhase"
-            :height="250"
-            :y-domain-line="true"
-            :y-formatter="yFormatter"
-            :y-domain="[maxPhase, 1]"
-            :x-domain-line="true"
-            :x-tick-line="true"
-            :curve-type="CurveType.Linear"
-        />
+        <ClientOnly>
+            <div v-if="!data?.length || !maxPhase">
+                <div class="animate-pulse rounded-2xl bg-accented h-[290px]" />
+            </div>
+            <LineChart
+                v-else
+                :data="data"
+                :categories="{
+                    pullPercent: {
+                        name: 'Pull Percent'
+                    }
+                }"
+                :y-num-ticks="maxPhase"
+                :height="250"
+                :y-domain-line="true"
+                :y-formatter="yFormatter"
+                :y-domain="[maxPhase, 1]"
+                :x-domain-line="true"
+                :x-tick-line="true"
+                :curve-type="CurveType.Linear"
+            />
+        </ClientOnly>
     </UCard>
 </template>

@@ -21,3 +21,11 @@ export enum JobImages {
     RedMage = 'https://lds-img.finalfantasyxiv.com/promo/h/C/NRnqJxzRtbDKR1ZHzxazWBBR2Y.png',
     Pictomancer = 'https://lds-img.finalfantasyxiv.com/promo/h/e/t0iiQ-ja8O8YNZaVimL5Qb6Tnw.png'
 }
+
+export type PBs = {
+    pullNumber: number
+    pull: {
+        lastPhase: number
+        bossPercentage: number
+    }
+}

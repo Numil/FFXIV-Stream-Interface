@@ -6,11 +6,14 @@ definePageMeta({
 const route = useRoute()
 const { zoneId, encounterId } = route.query
 
-const { bestPhase, bestPullPercent, pullCount, composition, data } = useNonRaceFight(
-    zoneId as string,
-    encounterId as string,
-    0
-)
+const {
+    bestPhase,
+    bestPullPercent,
+    pullCount,
+    composition,
+    data,
+    numberOfPullsInBetweenEachPB
+} = useNonRaceFight(zoneId as string, encounterId as string, 0)
 
 const numberOfPullPerPhase = computed(() => {
     return data.value?.reduce(
@@ -23,21 +26,20 @@ const numberOfPullPerPhase = computed(() => {
 })
 
 const numberOfPullsSincePB = computed(() => {
-    console.log(bestPhase.value, bestPullPercent.value)
-    console.log(data.value)
     const bestPullIndex = data.value?.findIndex((fight) => {
         return (
-            fight.lastPhase === bestPhase.value
-            && fight.bossPercentage === bestPullPercent.value
+            fight.lastPhase === bestPhase.value &&
+            fight.bossPercentage === bestPullPercent.value
         )
     })
 
-    console.log(bestPullIndex)
     return data.value?.slice(bestPullIndex).length
 })
 
 const maxPhase = computed(() => {
-    return route.query.phases ? Number(route.query.phases) : Math.max(...data.value?.map(fight => fight.lastPhase) || [])
+    return route.query.phases
+        ? Number(route.query.phases)
+        : Math.max(...(data.value?.map((fight) => fight.lastPhase) || []))
 })
 </script>
 
@@ -51,32 +53,32 @@ const maxPhase = computed(() => {
             :number-of-pulls-since-p-b="numberOfPullsSincePB"
             :loading="!bestPhase"
         />
-        <UCard
-            variant="soft"
-            class="col-span-3"
-        >
+        <PBProgression
+            :number-of-pulls-in-between-each-p-b="numberOfPullsInBetweenEachPB"
+            :pull-count="pullCount"
+        />
+        <UCard variant="soft" class="col-span-3">
             <template #header>
-                <h1 class="text-2xl font-bold">
-                    Composition
-                </h1>
+                <h1 class="text-2xl font-bold">Composition</h1>
             </template>
 
             <div
                 v-if="!composition"
                 class="animate-pulse rounded-xl col-span-3 bg-accented h-[180px]"
             />
-            <PlayerComposition
-                v-else
-                :composition
-                is-stats
-            />
+            <PlayerComposition v-else :composition is-stats />
         </UCard>
         <PullGraph
-            :data="data?.map((fight, index) => ({
-                phase: fight.lastPhase,
-                count: index + 1,
-                pullPercent: ((fight.bossPercentage + (fight.lastPhase - 1) * 100)/100) +1
-            })) || []"
+            :data="
+                data?.map((fight, index) => ({
+                    phase: fight.lastPhase,
+                    count: index + 1,
+                    pullPercent:
+                        (fight.bossPercentage + (fight.lastPhase - 1) * 100) /
+                            100 +
+                        1
+                })) || []
+            "
             :max-phase="maxPhase"
             class="col-span-3"
         />
