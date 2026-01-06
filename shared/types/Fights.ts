@@ -86,8 +86,7 @@ export const Fights: FightUI[] = [
             {
                 phase: 1,
                 pullPosition: 'self-end',
-                pullJustify: 'justify-end',
-                theme: 'light'
+                pullJustify: 'justify-end'
             },
             {
                 phase: 2,
