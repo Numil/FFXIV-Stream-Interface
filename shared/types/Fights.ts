@@ -72,5 +72,37 @@ export const Fights: FightUI[] = [
                 pullPosition: 'self-end'
             }
         ]
+    },
+    {
+        id: '73',
+        name: 'ARCHW',
+        phases: [
+            '/ARCHW/M9_boss.png',
+            '/ARCHW/M10_boss.png',
+            '/ARCHW/M11_boss.png',
+            '/ARCHW/M12_boss.png'
+        ],
+        customPhaseStyles: [
+            {
+                phase: 1,
+                pullPosition: 'self-end',
+                pullJustify: 'justify-end',
+                theme: 'light'
+            },
+            {
+                phase: 2,
+                pullPosition: 'self-end',
+                pullJustify: 'justify-end'
+            },
+            {
+                phase: 3,
+                pullJustify: 'justify-end'
+            },
+            {
+                phase: 4,
+                pullPosition: 'self-end',
+                theme: 'light'
+            }
+        ]
     }
 ]

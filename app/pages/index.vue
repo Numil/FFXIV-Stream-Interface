@@ -4,8 +4,8 @@ import { JobImages } from '~~/shared/types/UI'
 
 const fightId = (useRoute().query.fightId as string) || undefined
 
-const { currentEncounter, currentEncounterIndex, encounterCount }
-    = useRace(fightId)
+const { currentEncounter, currentEncounterIndex, encounterCount } =
+    useRace(fightId)
 
 const pullCount = computed<number | undefined>(
     () => currentEncounter.value?.pullCount
@@ -21,14 +21,13 @@ const bestPhase = computed<number>(
 
 const isCleared = computed<boolean>(() => !!currentEncounter.value?.isKilled)
 
-const fightImages = Fights.find(fight => fight.id === fightId)?.phases || []
+const fightStyleData = Fights.find((fight) => fight.id === fightId)
+const fightImages = fightStyleData?.phases || []
 
 const phaseImageLink = computed<string | undefined>(() => {
     if (fightImages.length === 0) return 'clear.png'
 
-    return encounterCount.value !== 1
-        ? fightImages[currentEncounterIndex.value]
-        : fightImages[bestPhase.value - 1]
+    return fightImages[bestPhase.value - 1]
 })
 
 const roundedStyle = computed<string>(
@@ -53,18 +52,22 @@ const borderStyle = computed<string>(
         <div
             class="h-[512px] flex p-4 gap-4 flex-col z-20 text-slate-50 font-extrabold uppercase radial-gradient"
             :class="[
-                bestPhase === 3 || bestPhase === 4
-                    ? 'justify-end'
-                    : 'justify-between'
+                fightStyleData?.customPhaseStyles?.find(
+                    (style) => style.phase === bestPhase
+                )?.pullJustify || 'justify-between'
             ]"
         >
             <div
                 class="flex px-3 py-2 rounded-2xl w-fit flex-col"
                 :class="[
-                    {
-                        'self-end': bestPhase === 3
-                    },
-                    bestPhase === 4 ? 'bg-white/20' : 'bg-black/60'
+                    fightStyleData?.customPhaseStyles?.find(
+                        (style) => style.phase === bestPhase
+                    )?.pullPosition,
+                    fightStyleData?.customPhaseStyles?.find(
+                        (style) => style.phase === bestPhase
+                    )?.theme === 'light'
+                        ? 'bg-white/20'
+                        : 'bg-black/60'
                 ]"
             >
                 <div
@@ -82,10 +85,7 @@ const borderStyle = computed<string>(
                         }}
                         / {{ encounterCount }}
                     </div>
-                    <div
-                        v-if="!isCleared"
-                        class="text-[3rem] leading-[3rem]"
-                    >
+                    <div v-if="!isCleared" class="text-[3rem] leading-[3rem]">
                         Best pull
                     </div>
                     <span
@@ -94,10 +94,7 @@ const borderStyle = computed<string>(
                     >
                         {{ bestPullPercent }}
                     </span>
-                    <span
-                        v-else
-                        class="text-[3rem] leading-[3rem]"
-                    >
+                    <span v-else class="text-[3rem] leading-[3rem]">
                         Cleared
                     </span>
                     <div class="text-[2rem] leading-[2rem]">
@@ -107,7 +104,13 @@ const borderStyle = computed<string>(
             </div>
             <div
                 class="flex flex-col gap-2 px-4 py-2 rounded-2xl justify-end"
-                :class="[bestPhase === 4 ? 'bg-white/20' : 'bg-black/60']"
+                :class="[
+                    fightStyleData?.customPhaseStyles?.find(
+                        (style) => style.phase === bestPhase
+                    )?.theme === 'light'
+                        ? 'bg-white/20'
+                        : 'bg-black/60'
+                ]"
             >
                 <div
                     v-if="!currentEncounter?.composition"
