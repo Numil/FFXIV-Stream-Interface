@@ -37,6 +37,13 @@ const roundedStyle = computed<string>(
 const borderStyle = computed<string>(
     () => (useRoute().query.border as string) || '0'
 )
+
+useSeoMeta({
+    title: fightStyleData
+        ? `${fightStyleData.name} - Raid Tracker`
+        : 'Raid Tracker',
+    ogImage: phaseImageLink.value
+})
 </script>
 
 <template>
