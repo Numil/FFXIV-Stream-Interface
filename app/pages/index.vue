@@ -42,7 +42,9 @@ useSeoMeta({
     title: fightStyleData
         ? `${fightStyleData.name} - Raid Tracker`
         : 'Raid Tracker',
-    ogImage: phaseImageLink.value
+    ogImage: phaseImageLink.value,
+    twitterImage: phaseImageLink.value,
+    twitterCard: 'summary_large_image'
 })
 </script>
 
