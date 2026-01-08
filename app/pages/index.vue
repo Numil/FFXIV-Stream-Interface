@@ -27,7 +27,7 @@ const fightImages = fightStyleData?.phases || []
 const phaseImageLink = computed<string | undefined>(() => {
     if (fightImages.length === 0) return 'clear.png'
 
-    return fightImages[bestPhase.value - 1]
+    return fightImages[bestPhase.value]
 })
 
 const roundedStyle = computed<string>(
