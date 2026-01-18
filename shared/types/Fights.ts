@@ -80,7 +80,8 @@ export const Fights: FightUI[] = [
             '/ARCHW/M9_boss.png',
             '/ARCHW/M10_boss.png',
             '/ARCHW/M11_boss.png',
-            '/ARCHW/M12_boss.png'
+            '/ARCHW/M12_boss.png',
+            '/ARCHW/M12P2_boss.png'
         ],
         customPhaseStyles: [
             {
@@ -101,6 +102,10 @@ export const Fights: FightUI[] = [
                 phase: 4,
                 pullPosition: 'self-end',
                 theme: 'light'
+            },
+            {
+                phase: 5,
+                pullPosition: 'self-end'
             }
         ]
     }
