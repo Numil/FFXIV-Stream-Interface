@@ -18,11 +18,9 @@ export default defineNuxtConfig({
     },
     eslint: {
         config: {
-            stylistic: {
-                quotes: 'single',
-                semi: false,
-                indent: 4,
-                commaDangle: 'never'
+            stylistic: false,
+            typescript: {
+                strict: true
             }
         }
     }

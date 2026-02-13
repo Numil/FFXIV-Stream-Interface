@@ -35,25 +35,25 @@ export default (zoneId?: string, delay: number = 30000) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${authToken.value}`
+                    Authorization: `Bearer ${authToken.value}`
                 },
                 body: JSON.stringify({ query: raceDocument })
             }
         )
 
-        const progressRaceData: ProgressRaceData
-            = raceResponse.data.progressRaceData
+        const progressRaceData: ProgressRaceData =
+            raceResponse.data.progressRaceData
 
         const progressRace = progressRaceData.progressRace[0]
 
         if (progressRace) {
             currentEncounter.value = progressRace.encounters.find(
-                encounter => encounter.id === progressRace.currentEncounterId
+                (encounter) => encounter.id === progressRace.currentEncounterId
             )
 
             encounterCount.value = progressRace.encounters.length
             currentEncounterIndex.value = progressRace.encounters.findIndex(
-                encounter => encounter.id === progressRace.currentEncounterId
+                (encounter) => encounter.id === progressRace.currentEncounterId
             )
 
             if (currentEncounter.value) {
@@ -61,8 +61,8 @@ export default (zoneId?: string, delay: number = 30000) => {
             }
 
             if (currentEncounter.value) {
-                lastPull.value
-                    = currentEncounter.value.perPull[
+                lastPull.value =
+                    currentEncounter.value.perPull[
                         currentEncounter.value.perPull.length - 1
                     ]
             }
@@ -73,8 +73,7 @@ export default (zoneId?: string, delay: number = 30000) => {
         pulls.forEach((element) => {
             if (!fightIDsPerReports.value[element.reportCode]) {
                 fightIDsPerReports.value[element.reportCode] = [element.fightId]
-            }
-            else if (
+            } else if (
                 !fightIDsPerReports.value[element.reportCode]?.includes(
                     element.fightId
                 )
