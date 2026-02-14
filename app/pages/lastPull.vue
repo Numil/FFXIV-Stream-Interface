@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { Fights } from '~~/shared/types/Fights'
-
 const fightId = (useRoute().query.fightId as string) || undefined
-const { lastPull, currentEncounter, currentEncounterIndex, encounterCount }
-    = useRace(fightId)
+const { lastPull, currentEncounter, currentEncounterIndex, encounterCount } =
+    useRace(fightId)
 
 const lastPullPercent = computed(() => lastPull.value?.bestPercentForDisplay)
 
@@ -11,7 +9,7 @@ const roundedStyle = computed<string>(
     () => (useRoute().query.rounded as string) || '0'
 )
 
-const fightImages = Fights.find(fight => fight.id === fightId)?.phases || []
+const fightImages = Fights.find((fight) => fight.id === fightId)?.phases || []
 
 const bestPhase = computed<number>(
     () => (currentEncounter.value?.bestPhaseIndex || 0) + 1

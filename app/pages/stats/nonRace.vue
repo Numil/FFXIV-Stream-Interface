@@ -17,7 +17,7 @@ const {
 
 const numberOfPullPerPhase = computed(() => {
     return data.value?.reduce(
-        (acc: Record<number, number>, fight: FightDTO) => {
+        (acc, fight) => {
             acc[fight.lastPhase] = (acc[fight.lastPhase] || 0) + 1
             return acc
         },

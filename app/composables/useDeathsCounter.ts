@@ -1,20 +1,4 @@
-import type { APIResponse } from '#shared/types/API'
-import type { FightIDsWithReport, ReportDataObject } from '#shared/types/Deaths'
-import { gql } from 'graphql-request'
-
 export default (fightIDsPerReports: Ref<FightIDsWithReport>) => {
-    const authToken = useAuthToken()
-
-    const getDeathsDocument = (reportCode: string, fightIDs: number[]) => gql`
-        query {
-            reportData {
-                report(code: "${reportCode}") {
-                    table(dataType: Deaths, fightIDs: [${fightIDs}]) 
-                }
-            }
-        }
-    `
-
     const deathCounts = ref(0)
 
     let previousFightIDsPerReports: FightIDsWithReport = {}
@@ -27,45 +11,40 @@ export default (fightIDsPerReports: Ref<FightIDsWithReport>) => {
         { deep: true }
     )
 
-    const fetchFightsData = async (reportCode: string, fightIDs: number[]) =>
-        await $fetch<APIResponse<ReportDataObject>>(`/fflogs/api/v2/client`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken.value}`
-            },
-            body: JSON.stringify({
-                query: getDeathsDocument(reportCode, fightIDs)
-            })
+    const fetchDeathCount = async (reportCode: string, fightIDs: number[]) => {
+        const response = await $fetch('/api/deaths', {
+            params: {
+                reportCode,
+                fightIDs: fightIDs.join(',')
+            }
         })
+        return response.deathCount
+    }
 
     const getDeathsData = async (value: FightIDsWithReport) => {
         for (const reportCode in value) {
             if (!value[reportCode]) continue
-            // We make chunks of 10 fight IDs to avoid hitting the API limit
             const fightIDsChunks = chunkFights(value[reportCode], 10)
 
             for (const chunk of fightIDsChunks) {
-                const response = await fetchFightsData(reportCode, chunk)
-
-                // We add the number of deaths events to the total
-                deathCounts.value
-                    += response.data.reportData.report.table.data.entries.length
+                const count = await fetchDeathCount(reportCode, chunk)
+                deathCounts.value += count
             }
         }
     }
 
     const onUpdatedReports = async () => {
-        // We only get the reports that have new data
         const changedReports = Object.keys(fightIDsPerReports.value).filter(
-            reportCode =>
-                !Object.prototype.hasOwnProperty.call(previousFightIDsPerReports, reportCode)
-                || previousFightIDsPerReports[reportCode]?.length
-                !== fightIDsPerReports.value[reportCode]?.length
+            (reportCode) =>
+                !Object.prototype.hasOwnProperty.call(
+                    previousFightIDsPerReports,
+                    reportCode
+                ) ||
+                previousFightIDsPerReports[reportCode]?.length !==
+                    fightIDsPerReports.value[reportCode]?.length
         )
 
         if (changedReports.length > 0) {
-            // We create a new object with the fight IDs that were not present in the previous object
             const newFightIDsPerReports: FightIDsWithReport = {}
 
             changedReports.forEach((reportCode) => {
@@ -74,11 +53,12 @@ export default (fightIDsPerReports: Ref<FightIDsWithReport>) => {
                 newFightIDsPerReports[reportCode] = fightIDsPerReports.value[
                     reportCode
                 ].filter(
-                    fightID =>
-                        !Object.prototype.hasOwnProperty.call(previousFightIDsPerReports,
+                    (fightID) =>
+                        !Object.prototype.hasOwnProperty.call(
+                            previousFightIDsPerReports,
                             reportCode
-                        )
-                        || !previousFightIDsPerReports[reportCode]?.includes(
+                        ) ||
+                        !previousFightIDsPerReports[reportCode]?.includes(
                             fightID
                         )
                 )

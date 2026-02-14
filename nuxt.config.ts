@@ -7,9 +7,7 @@ export default defineNuxtConfig({
     runtimeConfig: {
         oauthToken: '',
         clientId: '',
-        public: {
-            guildId: ''
-        }
+        guildId: ''
     },
     compatibilityDate: '2025-03-29',
     typescript: {

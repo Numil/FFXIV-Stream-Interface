@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Fights } from '~~/shared/types/Fights'
-
 const route = useRoute()
 
 const encounterId = route.query.encounterId as string | undefined
@@ -21,9 +19,10 @@ const {
     composition,
     encounterCount,
     currentEncounterIndex
-} = mode === 'nonRace'
-    ? useNonRaceFight(route.query.zoneId as string, encounterId!, 100000)
-    : useRace(fightId)
+} =
+    mode === 'nonRace'
+        ? useNonRaceFight(route.query.zoneId as string, encounterId!, 100000)
+        : useRace(fightId)
 
 const bestPullDisplay = computed(() => {
     if (mode === 'nonRace' && bestPullPercent.value !== undefined) {
@@ -111,7 +110,11 @@ useSeoMeta({
                         class="text-[3rem] leading-[3rem]"
                     >
                         Progress
-                        {{ isCleared ? currentEncounterIndex + 1 : currentEncounterIndex }}
+                        {{
+                            isCleared
+                                ? currentEncounterIndex + 1
+                                : currentEncounterIndex
+                        }}
                         / {{ encounterCount }}
                     </div>
                     <div
