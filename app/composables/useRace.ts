@@ -1,4 +1,5 @@
 import type { APIResponse } from '#shared/types/API'
+import type { PlayerDetails } from '#shared/types/FightDTO'
 import type {
     Encounter,
     ProgressRaceData,
@@ -85,18 +86,40 @@ export default (zoneId?: string, delay: number = 30000) => {
         })
     }
 
-    const interval = ref<ReturnType<typeof setInterval> | undefined>()
+    const bestPullPercent = computed<string | undefined>(
+        () => currentEncounter.value?.bestPercentForDisplay
+    )
+
+    const bestPhase = computed<number>(
+        () => (currentEncounter.value?.bestPhaseIndex ?? 0) + 1
+    )
+
+    const isCleared = computed<boolean>(
+        () => !!currentEncounter.value?.isKilled
+    )
+
+    const pullCount = computed<number>(
+        () => currentEncounter.value?.pullCount ?? 0
+    )
+
+    const composition = computed<PlayerDetails | undefined>(() =>
+        currentEncounter.value?.composition?.roles
+            ? formatForPlayerDetails(currentEncounter.value.composition.roles)
+            : undefined
+    )
+
+    let interval: ReturnType<typeof setInterval> | undefined = undefined
 
     onMounted(() => {
         fetchRaceData()
-        interval.value = setInterval(async () => {
+        interval = setInterval(async () => {
             await fetchRaceData()
         }, delay)
     })
 
     onUnmounted(() => {
         if (interval) {
-            clearInterval(interval.value)
+            clearInterval(interval)
         }
     })
 
@@ -105,6 +128,11 @@ export default (zoneId?: string, delay: number = 30000) => {
         currentEncounterIndex,
         encounterCount,
         fightIDsPerReports,
-        lastPull
+        lastPull,
+        bestPullPercent,
+        bestPhase,
+        isCleared,
+        pullCount,
+        composition
     }
 }

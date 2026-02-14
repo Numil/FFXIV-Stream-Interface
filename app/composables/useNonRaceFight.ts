@@ -130,7 +130,7 @@ export default (zoneId: string, encounterId: string, delay: number = 30000) => {
     })
 
     const isCleared = computed(() => {
-        return data.value?.some((fight) => fight.killed) || false
+        return bestPullPercent.value ? bestPullPercent.value <= 0.1 : false
     })
 
     const numberOfPullsInBetweenEachPB = computed<PBs[]>(() => {
@@ -192,12 +192,17 @@ export default (zoneId: string, encounterId: string, delay: number = 30000) => {
         }
     })
 
+    const encounterCount = ref(1)
+    const currentEncounterIndex = ref(0)
+
     return {
         bestPullPercent,
         bestPhase,
         isCleared,
         pullCount,
         composition,
+        encounterCount,
+        currentEncounterIndex,
         data,
         numberOfPullsInBetweenEachPB
     }

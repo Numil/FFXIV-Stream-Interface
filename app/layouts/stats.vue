@@ -6,7 +6,7 @@
             <template #right>
                 <UButton
                     :to="{
-                        name: 'nonRace',
+                        name: 'index',
                         query: useRoute().query
                     }"
                 >

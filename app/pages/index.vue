@@ -1,41 +1,57 @@
 <script setup lang="ts">
 import { Fights } from '~~/shared/types/Fights'
-import { JobImages } from '~~/shared/types/UI'
 
-const fightId = (useRoute().query.fightId as string) || undefined
+const route = useRoute()
 
-const { currentEncounter, currentEncounterIndex, encounterCount } =
-    useRace(fightId)
+const encounterId = route.query.encounterId as string | undefined
+const mode = encounterId ? 'nonRace' : 'race'
 
-const pullCount = computed<number | undefined>(
-    () => currentEncounter.value?.pullCount
-)
+const fightId =
+    (route.query.fightId as string) ||
+    (route.query.zoneId as string) ||
+    undefined
 
-const bestPullPercent = computed<string | undefined>(
-    () => currentEncounter.value?.bestPercentForDisplay
-)
+const phases = Number(route.query.phases) || 0
 
-const bestPhase = computed<number>(
-    () => (currentEncounter.value?.bestPhaseIndex || 0) + 1
-)
+const {
+    bestPullPercent,
+    bestPhase,
+    isCleared,
+    pullCount,
+    composition,
+    encounterCount,
+    currentEncounterIndex
+} = mode === 'nonRace'
+    ? useNonRaceFight(route.query.zoneId as string, encounterId!, 100000)
+    : useRace(fightId)
 
-const isCleared = computed<boolean>(() => !!currentEncounter.value?.isKilled)
+const bestPullDisplay = computed(() => {
+    if (mode === 'nonRace' && bestPullPercent.value !== undefined) {
+        return `${bestPullPercent.value} %`
+    }
+    return bestPullPercent.value
+})
 
 const fightStyleData = Fights.find((fight) => fight.id === fightId)
 const fightImages = fightStyleData?.phases || []
 
 const phaseImageLink = computed<string | undefined>(() => {
     if (fightImages.length === 0) return 'clear.png'
+    if (isCleared.value) return 'clear.png'
 
-    return fightImages[currentEncounterIndex.value || bestPhase.value]
+    if (encounterCount.value > 1) {
+        return fightImages[currentEncounterIndex.value]
+    }
+
+    return fightImages[(bestPhase.value ?? 1) - 1]
 })
 
 const roundedStyle = computed<string>(
-    () => (useRoute().query.rounded as string) || '0'
+    () => (route.query.rounded as string) || '0'
 )
 
 const borderStyle = computed<string>(
-    () => (useRoute().query.border as string) || '0'
+    () => (route.query.border as string) || '0'
 )
 
 useSeoMeta({
@@ -50,9 +66,17 @@ useSeoMeta({
 
 <template>
     <div
-        v-if="currentEncounter"
+        v-if="bestPhase"
         class="relative flex flex-col w-fit h-fit border-slate-200/60 overflow-hidden min-w-[820px]"
         :style="{ borderRadius: roundedStyle, borderWidth: borderStyle }"
+        @click="
+            mode === 'nonRace'
+                ? navigateTo({
+                      name: 'stats-nonRace',
+                      query: route.query
+                  })
+                : undefined
+        "
     >
         <NuxtImg
             class="absolute aspect-video object-cover h-[512px]"
@@ -83,16 +107,18 @@ useSeoMeta({
                     class="drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)] flex flex-col gap-1"
                 >
                     <div
-                        v-if="encounterCount !== 1"
+                        v-if="encounterCount > 1"
                         class="text-[3rem] leading-[3rem]"
                     >
                         Progress
-                        {{
-                            currentEncounter?.isKilled
-                                ? currentEncounterIndex + 1
-                                : currentEncounterIndex
-                        }}
+                        {{ isCleared ? currentEncounterIndex + 1 : currentEncounterIndex }}
                         / {{ encounterCount }}
+                    </div>
+                    <div
+                        v-if="mode === 'nonRace' && phases !== 1"
+                        class="text-[3rem] leading-[3rem]"
+                    >
+                        Phase {{ bestPhase }}
                     </div>
                     <div v-if="!isCleared" class="text-[3rem] leading-[3rem]">
                         Best pull
@@ -101,7 +127,7 @@ useSeoMeta({
                         v-if="bestPhase !== undefined && !isCleared"
                         class="text-[3rem] leading-[3rem]"
                     >
-                        {{ bestPullPercent }}
+                        {{ bestPullDisplay }}
                     </span>
                     <span v-else class="text-[3rem] leading-[3rem]">
                         Cleared
@@ -122,36 +148,13 @@ useSeoMeta({
                 ]"
             >
                 <div
-                    v-if="!currentEncounter?.composition"
+                    v-if="!composition"
                     class="text-4xl drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)] text-center"
                 >
                     HYPE (ﾉ◕ヮ◕)ﾉ*:・ﾟ✧
                 </div>
 
-                <div
-                    v-for="role in currentEncounter?.composition?.roles"
-                    :key="role.name"
-                    class="flex flex-wrap w-full relative"
-                >
-                    <div class="flex gap-4 overflow-hidden">
-                        <div
-                            v-for="player in role.players"
-                            :key="player.name"
-                            class="flex shrink-0 gap-2 items-center text-lg drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)]"
-                        >
-                            <NuxtImg
-                                class="size-8"
-                                :src="
-                                    JobImages[
-                                        player.type as keyof typeof JobImages
-                                    ]
-                                "
-                                alt="player avatar"
-                            />
-                            {{ player.name }}
-                        </div>
-                    </div>
-                </div>
+                <PlayerComposition v-if="composition" :composition />
             </div>
         </div>
     </div>
