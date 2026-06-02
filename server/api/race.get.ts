@@ -17,6 +17,7 @@ export default defineCachedEventHandler(
 
         const raceResponse =
             await fflogsQuery<ProgressRaceDataGraph>(raceDocument)
+
         const progressRaceData = raceResponse.data.progressRaceData
         const progressRace = progressRaceData.progressRace[0]
 
