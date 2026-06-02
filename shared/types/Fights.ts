@@ -108,5 +108,22 @@ export const Fights: FightUI[] = [
                 pullPosition: 'self-end'
             }
         ]
+    },
+    {
+        id: '76',
+        name: 'UMAD',
+        phases: [
+            '/UMAD/phase1.png',
+            '/UMAD/phase2.jpg',
+            '/UMAD/phase3.png',
+            '/UMAD/phase4.png'
+        ],
+        customPhaseStyles: [
+            {
+                phase: 1,
+                pullJustify: 'justify-end',
+                theme: 'light'
+            }
+        ]
     }
 ]
