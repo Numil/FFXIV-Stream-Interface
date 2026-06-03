@@ -114,7 +114,7 @@ export const Fights: FightUI[] = [
         name: 'UMAD',
         phases: [
             '/UMAD/phase1.png',
-            '/UMAD/phase2.jpg',
+            '/UMAD/phase2.png',
             '/UMAD/phase3.png',
             '/UMAD/phase4.png'
         ],
