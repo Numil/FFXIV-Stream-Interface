@@ -115,8 +115,9 @@ export const Fights: FightUI[] = [
         phases: [
             '/UMAD/phase1.png',
             '/UMAD/phase2.png',
-            '/UMAD/phase3.png',
-            '/UMAD/phase4.png'
+            '/UMAD/phase3.jpg',
+            '/UMAD/phase4.jpg',
+            '/UMAD/phase5.jpg'
         ],
         customPhaseStyles: [
             {
