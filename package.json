@@ -11,23 +11,23 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@nuxt/eslint": "1.15.1",
-    "@nuxt/image": "1.11.0",
-    "@nuxt/ui": "^4.4.0",
-    "@types/luxon": "^3.7.1",
-    "eslint": "^9.39.2",
-    "graphql": "^16.12.0",
-    "graphql-request": "^7.2.0",
+    "@nuxt/eslint": "1.17.0",
+    "@nuxt/image": "2.1.0",
+    "@nuxt/ui": "^4.11.3",
+    "@types/luxon": "^3.7.6",
+    "eslint": "^9.39.5",
+    "graphql": "^17.0.2",
+    "graphql-request": "^7.4.0",
     "luxon": "^3.7.2",
-    "nuxt": "4.1.2",
-    "nuxt-charts": "2.1.2",
-    "prettier": "^3.8.1",
+    "nuxt": "^4.6.1",
+    "nuxt-charts": "2.2.3",
+    "prettier": "^3.9.9",
     "typescript": "^5.9.3",
-    "vue-tsc": "^3.1.1"
+    "vue-tsc": "^3.3.12"
   },
   "devDependencies": {
-    "@graphql-codegen/client-preset": "5.2.2",
-    "sass": "^1.97.3"
+    "@graphql-codegen/client-preset": "6.2.2",
+    "sass": "^1.105.1"
   },
   "packageManager": "yarn@4.10.3"
 }

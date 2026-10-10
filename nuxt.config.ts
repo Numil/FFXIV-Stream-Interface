@@ -3,6 +3,7 @@ export default defineNuxtConfig({
     modules: ['nuxt-charts', '@nuxt/ui', '@nuxt/eslint', '@nuxt/image'],
     ssr: false,
     devtools: { enabled: true },
+    buildDir: '.nuxt',
     css: ['~/assets/css/main.css'],
     runtimeConfig: {
         oauthToken: '',
