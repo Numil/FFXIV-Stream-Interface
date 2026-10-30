@@ -11,6 +11,8 @@ WORKDIR /src
 
 FROM base AS build
 
+RUN npm install -g corepack && corepack enable
+
 COPY --link package.json yarn.lock .yarnrc.yml ./
 COPY .yarn ./.yarn
 RUN yarn install --immutable
